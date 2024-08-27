@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Página Inicial</title>
+</head>
+<body>
+    <h1>Página Inicial</h1>
+    <ul>
+        <li><a href="{% url 'clientes_view' %}">Clientes</a></li>
+        <li><a href="{% url 'veiculos_view' %}">Veículos</a></li>
+        <li><a href="{% url 'registo_entradas_view' %}">Registo de Entradas</a></li>
+        <li><a href="{% url 'restauros_view' %}">Restauros</a></li>
+        <li><a href="{% url 'tarefas_restauro_view' %}">Tarefas de Restauro</a></li>
+        <li><a href="{% url 'faturacao_view' %}">Faturação</a></li>
+        <li><a href="{% url 'saidas_veiculos_view' %}">Saídas de Veículos</a></li>
+        <li><a href="{% url 'tipos_mao_obra_view' %}">Tipos de Mão de Obra</a></li>
+    </ul>
+</body>
+</html>

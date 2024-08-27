@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Saídas de Veículos</title>
+</head>
+<body>
+    <h1>Saídas de Veículos</h1>
+    <ul>
+        {% for saida in data %}
+            <li>Veículo: {{ saida.veiculo.marca }} {{ saida.veiculo.modelo }} - Data de Saída: {{ saida.data_saida }} - Condições de Saída: {{ saida.condicoes_saida }} - Observações: {{ saida.observacoes }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

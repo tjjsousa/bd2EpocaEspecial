@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Veículos</title>
+</head>
+<body>
+    <h1>Veículos</h1>
+    <ul>
+        {% for veiculo in data %}
+            <li>{{ veiculo.marca }} - {{ veiculo.modelo }} - {{ veiculo.ano }} - {{ veiculo.cor }} - {{ veiculo.matricula }} - Cliente: {{ veiculo.cliente.nome }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registo de Entradas</title>
+</head>
+<body>
+    <h1>Registo de Entradas</h1>
+    <ul>
+        {% for entrada in data %}
+            <li>Veículo: {{ entrada.veiculo.marca }} {{ entrada.veiculo.modelo }} - Data de Entrada: {{ entrada.data_entrada }} - Observações: {{ entrada.observacoes }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

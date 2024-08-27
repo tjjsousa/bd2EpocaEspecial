@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faturação</title>
+</head>
+<body>
+    <h1>Faturação</h1>
+    <ul>
+        {% for faturacao in data %}
+            <li>Restauro: {{ faturacao.restauro.id }} - Data de Emissão: {{ faturacao.data_emissao }} - Valor Total: {{ faturacao.valor_total }} - Itens: {{ faturacao.itens }} - Status de Pagamento: {{ faturacao.status_pagamento }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

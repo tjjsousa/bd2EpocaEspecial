@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tarefas de Restauro</title>
+</head>
+<body>
+    <h1>Tarefas de Restauro</h1>
+    <ul>
+        {% for tarefa in data %}
+            <li>Restauro: {{ tarefa.restauro.id }} - Descrição: {{ tarefa.descricao }} - Mão de Obra: {{ tarefa.mao_obra }} - Custo Total: {{ tarefa.custo_total }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

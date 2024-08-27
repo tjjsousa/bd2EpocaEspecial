@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Restauros</title>
+</head>
+<body>
+    <h1>Restauros</h1>
+    <ul>
+        {% for restauro in data %}
+            <li>Veículo: {{ restauro.veiculo.marca }} {{ restauro.veiculo.modelo }} - Data de Início: {{ restauro.data_inicio }} - Data de Fim: {{ restauro.data_fim }} - Status: {{ restauro.status }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

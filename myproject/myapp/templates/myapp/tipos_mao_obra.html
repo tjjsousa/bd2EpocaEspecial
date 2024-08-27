@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tipos de Mão de Obra</title>
+</head>
+<body>
+    <h1>Tipos de Mão de Obra</h1>
+    <ul>
+        {% for tipo in data %}
+            <li>Descrição: {{ tipo.descricao }} - Custo por Hora: {{ tipo.custo_por_hora }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
