@@ -16,6 +16,8 @@ class MongoModel(models.Model):
 #TABELAS DO PROJETO
 
 # Model para a tabela Clientes
+from djongo import models
+
 class Cliente(models.Model):
     nome = models.CharField(max_length=100)
     endereco = models.CharField(max_length=255)
@@ -23,9 +25,8 @@ class Cliente(models.Model):
     email = models.CharField(max_length=100)
 
     class Meta:
-        db_table = "clientes"
+        db_table = "cliente"
 
-# Model para a tabela Veiculos
 class Veiculo(models.Model):
     marca = models.CharField(max_length=50)
     modelo = models.CharField(max_length=50)
@@ -35,7 +36,7 @@ class Veiculo(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = "veiculos"
+        db_table = "veiculo"
 
 # Model para a tabela RegistoEntradas
 class RegistoEntrada(models.Model):

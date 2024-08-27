@@ -19,11 +19,11 @@ def index_view(request):
     return render(request, 'myapp/index.html')
 
 def clientes_view(request):
-    data = Cliente.objects.all()
+    data = Cliente.objects.using('mongo').all()
     return render(request, 'myapp/clientes.html', {'data': data})
 
 def veiculos_view(request):
-    data = Veiculo.objects.all()
+    data = Veiculo.objects.using('mongo').all()
     return render(request, 'myapp/veiculos.html', {'data': data})
 
 def registo_entradas_view(request):
