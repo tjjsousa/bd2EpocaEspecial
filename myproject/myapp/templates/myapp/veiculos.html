@@ -1,24 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inserir Veículo</title>
+    <title>Veículos</title>
 </head>
 <body>
-    <h1>Inserir Veículo</h1>
-    <form action="/insert_veiculo" method="post">
-        <label for="marca">Marca:</label><br>
-        <input type="text" id="marca" name="marca"><br>
-        <label for="modelo">Modelo:</label><br>
-        <input type="text" id="modelo" name="modelo"><br>
-        <label for="ano">Ano:</label><br>
-        <input type="number" id="ano" name="ano" min="1886" max="2099"><br>
-        <label for="cor">Cor:</label><br>
-        <input type="text" id="cor" name="cor"><br>
-        <label for="matricula">Matrícula:</label><br>
-        <input type="text" id="matricula" name="matricula"><br>
-        <label for="cliente">Cliente:</label><br>
-        <input type="text" id="cliente" name="cliente"><br>
-        <input type="submit" value="Inserir">
-    </form>
+    <h1>Veículos</h1>
+    <ul>
+        {% for veiculo in data %}
+            <li>{{ veiculo.marca }} - {{ veiculo.modelo }} - {{ veiculo.ano }} - {{ veiculo.cor }} - {{ veiculo.matricula }} - Cliente: {{ veiculo.cliente.nome }}</li>
+        {% endfor %}
+    </ul>
 </body>
 </html>

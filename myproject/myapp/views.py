@@ -26,6 +26,10 @@ def veiculos_view(request):
     data = Veiculo.objects.using('mongo').all()
     return render(request, 'myapp/veiculos.html', {'data': data})
 
+def veiculos_insert_view(request):
+    data = Veiculo.objects.using('mongo').all()
+    return render(request, 'myapp/inserir_veiculos.html', {'data': data})
+
 def registo_entradas_view(request):
     data = RegistoEntrada.objects.all()
     return render(request, 'myapp/registo_entradas.html', {'data': data})
