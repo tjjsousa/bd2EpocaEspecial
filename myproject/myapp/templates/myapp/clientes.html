@@ -10,5 +10,6 @@
             <li>{{ cliente.nome }} - {{ cliente.endereco }} - {{ cliente.telefone }} - {{ cliente.email }}</li>
         {% endfor %}
     </ul>
+    <li><a href="{% url 'clientes_insert_view' %}">Inserir Clientes</a></li>
 </body>
 </html>

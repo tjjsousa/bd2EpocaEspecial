@@ -6,7 +6,9 @@ urlpatterns = [
     path('mongo/', views.mongo_view, name='mongo_view'),
     #URLS DO PROJETO
     path('clientes/', views.clientes_view, name='clientes_view'),
+    path('clientes_insert/', views.clientes_insert_view, name='clientes_insert_view'),
     path('veiculos/', views.veiculos_view, name='veiculos_view'),
+    path('veiculos_insert/', views.veiculos_insert_view, name='veiculos_insert_view'),
     path('registo_entradas/', views.registo_entradas_view, name='registo_entradas_view'),
     path('restauros/', views.restauros_view, name='restauros_view'),
     path('tarefas_restauro/', views.tarefas_restauro_view, name='tarefas_restauro_view'),

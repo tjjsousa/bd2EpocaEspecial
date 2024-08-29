@@ -7,8 +7,9 @@
     <h1>Veículos</h1>
     <ul>
         {% for veiculo in data %}
-            <li>{{ veiculo.marca }} - {{ veiculo.modelo }} - {{ veiculo.ano }} - {{ veiculo.cor }} - {{ veiculo.matricula }} - Cliente: {{ veiculo.cliente.nome }}</li>
+            <li>{{ veiculo.marca }} - {{ veiculo.modelo }} - {{ veiculo.ano }} - {{ veiculo.cor }} - {{ veiculo.matricula }}</li>
         {% endfor %}
     </ul>
+    <li><a href="{% url 'veiculos_insert_view' %}">Inserir Veículos</a></li>
 </body>
 </html>

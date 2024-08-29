@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from .models import MyModel
+from .forms import VeiculoForm, ClienteForm
 from .models import MongoModel
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-
+from .database import inserir_cliente, inserir_veiculo
 
 def my_view(request):
     data = MyModel.objects.all()
@@ -22,13 +23,36 @@ def clientes_view(request):
     data = Cliente.objects.using('mongo').all()
     return render(request, 'myapp/clientes.html', {'data': data})
 
+def clientes_insert_view(request):
+    data = Cliente.objects.using('mongo').all()
+    if request.method == "GET":
+        form = ClienteForm(request.POST or None)
+        return render(request, 'myapp/inserir_clientes.html', {'data': data, 'form': form})
+    if request.method == "POST":
+        form = ClienteForm(request.POST)
+        if form.is_valid():
+            inserir_cliente(nome=form.cleaned_data['nome'], endereco=form.cleaned_data['endereco'], telefone=form.cleaned_data['telefone'], email=form.cleaned_data['email'])
+            return render(request, 'myapp/inserir_clientes.html', {'data': data, 'form': form})
+        else:
+            return render(request, 'myapp/inserir_clientes.html', {'data': data, 'form': form})
+    
 def veiculos_view(request):
     data = Veiculo.objects.using('mongo').all()
     return render(request, 'myapp/veiculos.html', {'data': data})
 
 def veiculos_insert_view(request):
     data = Veiculo.objects.using('mongo').all()
-    return render(request, 'myapp/inserir_veiculos.html', {'data': data})
+    if request.method == "GET":
+        form = VeiculoForm(request.POST or None)
+        return render(request, 'myapp/inserir_veiculos.html', {'data': data, 'form': form})
+    if request.method == "POST":
+        form = VeiculoForm(request.POST)
+        if form.is_valid():
+            form.cleaned_data
+            inserir_veiculo(cliente= form.data['cliente'], marca=form.data['marca'], modelo=form.data['modelo'], matricula=form.data['matricula'], cor=form.data['cor'], ano=form.data['ano'])
+            return render(request, 'myapp/inserir_veiculos.html', {'data': data, 'form': form})
+        else:
+            return render(request, 'myapp/inserir_veiculos.html', {'data': data, 'form': form})
 
 def registo_entradas_view(request):
     data = RegistoEntrada.objects.all()

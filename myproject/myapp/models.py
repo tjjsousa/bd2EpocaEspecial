@@ -16,9 +16,10 @@ class MongoModel(models.Model):
 #TABELAS DO PROJETO
 
 # Model para a tabela Clientes
-from djongo import models
+from django.db import models
 
 class Cliente(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
     nome = models.CharField(max_length=100)
     endereco = models.CharField(max_length=255)
     telefone = models.CharField(max_length=20)
@@ -26,14 +27,18 @@ class Cliente(models.Model):
 
     class Meta:
         db_table = "cliente"
+    def __str__(self):
+        return self.nome
 
+# Model para a tabela Veiculos
 class Veiculo(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
     marca = models.CharField(max_length=50)
     modelo = models.CharField(max_length=50)
     ano = models.IntegerField()
     cor = models.CharField(max_length=30)
     matricula = models.CharField(max_length=20)
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cliente = models.CharField(max_length=250)
 
     class Meta:
         db_table = "veiculo"
