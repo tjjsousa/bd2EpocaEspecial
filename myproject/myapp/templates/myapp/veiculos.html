@@ -2,14 +2,41 @@
 <html>
 <head>
     <title>Veículos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Veículos</h1>
-    <ul>
-        {% for veiculo in data %}
-            <li>{{ veiculo.marca }} - {{ veiculo.modelo }} - {{ veiculo.ano }} - {{ veiculo.cor }} - {{ veiculo.matricula }}</li>
-        {% endfor %}
-    </ul>
-    <li><a href="{% url 'veiculos_insert_view' %}">Inserir Veículos</a></li>
+    <div class="container">
+        <h1 class="mt-4">Veículos</h1>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Ano</th>
+                    <th>Cor</th>
+                    <th>Matrícula</th>
+                    <th>Cliente</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for veiculo in data %}
+                    <tr>
+                        <td>{{ veiculo.marca }}</td>
+                        <td>{{ veiculo.modelo }}</td>
+                        <td>{{ veiculo.ano }}</td>
+                        <td>{{ veiculo.cor }}</td>
+                        <td>{{ veiculo.matricula }}</td>
+                        <td>{{veiculo.cliente}}</td>
+                        <td>
+                            <a href="{% url 'veiculos_edit_view' veiculo.id %}" class="btn btn-primary">Editar</a>
+                            <a href="{% url 'veiculos_delete_view' veiculo.id %}" class="btn btn-danger">Apagar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'veiculos_insert_view' %}" class="btn btn-success">Inserir Veículo</a>
+    </div>
 </body>
 </html>

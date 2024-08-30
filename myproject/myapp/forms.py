@@ -8,11 +8,10 @@ class ClienteForm(forms.Form):
     email = forms.CharField(max_length=100)
 
 class VeiculoForm(forms.Form):
-    cliente = forms.ModelChoiceField(queryset=Cliente.objects.all(), empty_label="Selecione um cliente", to_field_name="id")
+    cliente = forms.ModelChoiceField(queryset=Cliente.objects.using('mongo').all(), empty_label="Selecione um cliente", to_field_name="id")
     marca = forms.CharField(max_length=100)
     modelo = forms.CharField(max_length=100)
     matricula = forms.CharField(max_length=100)
     cor = forms.CharField(max_length=100)
     ano = forms.IntegerField()
-    
     

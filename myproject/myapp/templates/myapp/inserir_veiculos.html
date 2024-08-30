@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Inserir Veículo</title>
+    <title>{% if not id %}
+        Inserir
+      {% endif %}
+      {% if id %}
+        Editar
+      {% endif %} Veículo</title>
 </head>
 <body>
-    <h1>Inserir Veículo</h1>
+    <h1>{% if not id %}
+        Inserir
+      {% endif %}
+      {% if id %}
+        Editar
+      {% endif %} Veículo</h1>
     <form method="post" action="" enctype="multipart/form-data">
         {% csrf_token %}
         {{form}}
+        {% if not id %}
         <input type="submit" value="Inserir">
+      {% endif %}
+      {% if id %}
+      <input type="submit" value="Editar">
+      {% endif %}
+        
     </form>
 </body>
 </html>

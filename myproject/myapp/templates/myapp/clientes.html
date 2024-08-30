@@ -1,15 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clientes</title>
+    <!-- Adicione o CSS do Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Clientes</h1>
-    <ul>
-        {% for cliente in data %}
-            <li>{{ cliente.nome }} - {{ cliente.endereco }} - {{ cliente.telefone }} - {{ cliente.email }}</li>
-        {% endfor %}
-    </ul>
-    <li><a href="{% url 'clientes_insert_view' %}">Inserir Clientes</a></li>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Meu Site</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{% url 'clientes_view' %}">Clientes <span class="sr-only">(current)</span></a>
+                </li>
+                <!-- Adicione mais links de navegação conforme necessário -->
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="mt-4">Clientes</h1>
+        <ul class="list-group">
+            {% for cliente in data %}
+                <li class="list-group-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            {{ cliente.nome }} - {{ cliente.endereco }} - {{ cliente.telefone }} - {{ cliente.email }}
+                        </div>
+                        <div>
+                            <a href="/myapp/clientes_edit/{{ cliente.id }}" class="btn btn-warning mr-2">Editar</a>
+                            <a href="/myapp/clientes_delete/{{ cliente.id }}" class="btn btn-danger">Apagar</a>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'clientes_insert_view' %}" class="btn btn-primary mt-3">Inserir Clientes</a>
+    </div>
+    <!-- Adicione o JavaScript do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>

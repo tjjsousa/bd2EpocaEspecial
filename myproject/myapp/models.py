@@ -1,5 +1,4 @@
 from django.db import models
-from djongo import models
 
 class MyModel(models.Model):
     name = models.CharField(max_length=100)
@@ -16,7 +15,6 @@ class MongoModel(models.Model):
 #TABELAS DO PROJETO
 
 # Model para a tabela Clientes
-from django.db import models
 
 class Cliente(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
@@ -27,6 +25,7 @@ class Cliente(models.Model):
 
     class Meta:
         db_table = "cliente"
+        managed = False
     def __str__(self):
         return self.nome
 
@@ -42,7 +41,10 @@ class Veiculo(models.Model):
 
     class Meta:
         db_table = "veiculo"
-
+        managed = False
+    def __str__(self):
+        return self.marca + " " + self.modelo
+        
 # Model para a tabela RegistoEntradas
 class RegistoEntrada(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
