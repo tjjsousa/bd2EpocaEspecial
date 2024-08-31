@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Registo de Entradas</title>
+    <title>Lista de Registos de Entrada</title>
+    <!-- Adicionando Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Registo de Entradas</h1>
-    <ul>
-        {% for entrada in data %}
-            <li>Veículo: {{ entrada.veiculo.marca }} {{ entrada.veiculo.modelo }} - Data de Entrada: {{ entrada.data_entrada }} - Observações: {{ entrada.observacoes }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center my-4">
+            <h1>Lista de Registos de Entrada</h1>
+            <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Veículo ID</th>
+                    <th>Data de Entrada</th>
+                    <th>Observações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for registo in data %}
+                <tr>
+                    <td>{{ registo.id }}</td>
+                    <td>{{ registo.veiculo_id }}</td>
+                    <td>{{ registo.data_entrada }}</td>
+                    <td>{{ registo.observacoes }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/myapp/registo_entradas_insert" class="btn btn-success mt-3">Adicionar Registo</a>
+    </div>
+    <!-- Adicionando scripts do Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 </body>
 </html>

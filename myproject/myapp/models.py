@@ -1,20 +1,5 @@
 from django.db import models
 
-class MyModel(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-
-class MongoModel(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField()
-
-    class Meta:
-        db_table = "mongo_model"
-
-
-#TABELAS DO PROJETO
-
-# Model para a tabela Clientes
 
 class Cliente(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
@@ -29,7 +14,6 @@ class Cliente(models.Model):
     def __str__(self):
         return self.nome
 
-# Model para a tabela Veiculos
 class Veiculo(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
     marca = models.CharField(max_length=50)
@@ -45,16 +29,16 @@ class Veiculo(models.Model):
     def __str__(self):
         return self.marca + " " + self.modelo
         
-# Model para a tabela RegistoEntradas
 class RegistoEntrada(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
     data_entrada = models.DateField()
     observacoes = models.TextField(null=True, blank=True)
-
+    
     class Meta:
         db_table = "registo_entradas"
+        managed = True
 
-# Model para a tabela Restauros
+
 class Restauro(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
     data_inicio = models.DateField()
@@ -64,7 +48,6 @@ class Restauro(models.Model):
     class Meta:
         db_table = "restauros"
 
-# Model para a tabela TarefasRestauro
 class TarefaRestauro(models.Model):
     restauro = models.ForeignKey(Restauro, on_delete=models.CASCADE)
     descricao = models.TextField()
@@ -74,7 +57,6 @@ class TarefaRestauro(models.Model):
     class Meta:
         db_table = "tarefas_restauro"
 
-# Model para a tabela Faturacao
 class Faturacao(models.Model):
     restauro = models.ForeignKey(Restauro, on_delete=models.CASCADE)
     data_emissao = models.DateField()
@@ -85,7 +67,6 @@ class Faturacao(models.Model):
     class Meta:
         db_table = "faturacao"
 
-# Model para a tabela SaidasVeiculos
 class SaidaVeiculo(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
     data_saida = models.DateField()
@@ -94,8 +75,6 @@ class SaidaVeiculo(models.Model):
 
     class Meta:
         db_table = "saidas_veiculos"
-
-# Model para a tabela TiposMaoObra
 class TipoMaoObra(models.Model):
     descricao = models.CharField(max_length=100)
     custo_por_hora = models.DecimalField(max_digits=10, decimal_places=2)

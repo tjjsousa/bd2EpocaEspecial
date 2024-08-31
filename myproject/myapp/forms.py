@@ -14,4 +14,9 @@ class VeiculoForm(forms.Form):
     matricula = forms.CharField(max_length=100)
     cor = forms.CharField(max_length=100)
     ano = forms.IntegerField()
+
+class RegistoEntradaForm(forms.Form):
+    veiculo_id = forms.CharField(widget=forms.HiddenInput())
+    data_entrada = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    observacoes = forms.CharField(max_length=100)
     
