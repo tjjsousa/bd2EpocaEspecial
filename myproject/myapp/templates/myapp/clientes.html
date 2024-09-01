@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clientes</title>
-    <!-- Adicione o CSS do Bootstrap -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-</head>
+    <head>
+        <title>Clientes</title>
+        <!-- Adicionando Bootstrap -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Meu Site</a>
@@ -18,31 +16,48 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="{% url 'clientes_view' %}">Clientes <span class="sr-only">(current)</span></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'registo_entradas_view' %}">Registo Entradas</a>
+                </li>
                 <!-- Adicione mais links de navegação conforme necessário -->
             </ul>
         </div>
     </nav>
     <div class="container">
-        <h1 class="mt-4">Clientes</h1>
-        <ul class="list-group">
-            {% for cliente in data %}
-                <li class="list-group-item">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            {{ cliente.nome }} - {{ cliente.endereco }} - {{ cliente.telefone }} - {{ cliente.email }}
-                        </div>
-                        <div>
-                            <a href="/myapp/clientes_edit/{{ cliente.id }}" class="btn btn-warning mr-2">Editar</a>
-                            <a href="/myapp/clientes_delete/{{ cliente.id }}" class="btn btn-danger">Apagar</a>
-                        </div>
-                    </div>
-                </li>
-            {% endfor %}
-        </ul>
-        <a href="{% url 'clientes_insert_view' %}" class="btn btn-primary mt-3">Inserir Clientes</a>
+        <div class="d-flex justify-content-between align-items-center my-4">
+            <h1>Clientes</h1>
+            <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Nome</th>
+                    <th>Endereço</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cliente in data %}
+                <tr>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.endereco }}</td>
+                    <td>{{ cliente.telefone }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>
+                        <a href="{% url 'clientes_edit_view' cliente.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
+                        <a href="{% url 'clientes_delete_view' cliente.id %}" class="btn btn-danger btn-sm">Apagar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{% url 'clientes_insert_view' %}" class="btn btn-success mt-3">Adicionar Cliente</a>
     </div>
-    <!-- Adicione o JavaScript do Bootstrap -->
+    <!-- Adicione o JS do Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
 </body>
 </html>
