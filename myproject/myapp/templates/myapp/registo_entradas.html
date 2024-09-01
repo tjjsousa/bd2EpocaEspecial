@@ -18,6 +18,7 @@
                     <th>Veículo ID</th>
                     <th>Data de Entrada</th>
                     <th>Observações</th>
+                    <th>Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,15 +28,75 @@
                     <td>{{ registo.veiculo_id }}</td>
                     <td>{{ registo.data_entrada }}</td>
                     <td>{{ registo.observacoes }}</td>
+                    <td>
+                        <a href="{% url 'registo_entrada_edit_view' registo.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-id="{{ registo.id }}">Apagar</button>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         <a href="/myapp/registo_entradas_insert" class="btn btn-success mt-3">Adicionar Registo</a>
     </div>
-    <!-- Adicionando scripts do Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza de que deseja excluir o registro de entrada com ID <span id="modal-registo-id"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Adicionando scripts do Bootstrap e jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var registoId = button.data('id');
+            console.log('Registro ID:', registoId); // Log para verificar o ID do registro
+            var modal = $(this);
+            modal.find('#modal-registo-id').text(registoId);
+            modal.find('#confirm-delete').data('id', registoId);
+        });
+    
+        $('#confirm-delete').on('click', function () {
+            var registoId = $(this).data('id');
+            console.log('Confirm Delete ID:', registoId); // Log para verificar o ID do registro no botão de confirmação
+            $.ajax({
+                url: '/myapp/registo_entradas_delete/' + registoId,
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    console.log('Delete response:', response); // Log para verificar a resposta da requisição
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        alert('Erro ao excluir o registro.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Delete error:', error); // Log para verificar o erro
+                    alert('Erro ao excluir o registro.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

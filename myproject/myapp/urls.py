@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import registo_entrada_insert_view, registo_entradas_view
+
 
 urlpatterns = [
     #URLS DO PROJETO
@@ -19,12 +19,16 @@ urlpatterns = [
     path('veiculos_delete/<str:id>', views.veiculos_delete_view, name='veiculos_delete_view'),
     #VEICULOS
     #REGISTO ENTRADAS
-    path('registo_entradas/', registo_entradas_view, name='registo_entradas_view'),
-    path('registo_entradas_insert', registo_entrada_insert_view, name='registo_entrada_insert_view'),
-
+    path('registo_entradas/', views.registo_entradas_view, name='registo_entradas_view'),
+    path('registo_entradas_insert', views.registo_entrada_insert_view, name='registo_entrada_insert_view'),
+    path('registo_entradas_edit/<str:id>', views.registo_entrada_edit_view, name='registo_entrada_edit_view'),
+    path('registo_entradas_delete/<str:id>', views.registo_entrada_delete_view, name='registo_entrada_delete_view'),
     #REGISTO ENTRADAS
     #RESTAUROS
     path('restauros/', views.restauros_view, name='restauros_view'),
+    path('restauros/create/', views.restauro_insert_view, name='restauro_insert_view'),
+    path('restauros/edit/<int:id>/', views.restauro_edit_view, name='restauro_edit_view'),
+    path('restauros/delete/<int:id>/', views.restauro_delete_view, name='restauro_delete_view'),
     #RESTAUROS
     #TAREFAS RESTAURO
     path('tarefas_restauro/', views.tarefas_restauro_view, name='tarefas_restauro_view'),

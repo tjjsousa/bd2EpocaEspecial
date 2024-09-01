@@ -80,18 +80,98 @@ def inserir_registo_entrada(veiculo_id, data_entrada, observacoes):
     finally:
         connection.close()
 
+def editar_registo_entrada(registo_id, veiculo_id, data_entrada, observacoes):
+    if registo_id is None:
+        raise ValueError("O campo 'registo_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE registo_entradas SET veiculo_id = %s, data_entrada = %s, observacoes = %s WHERE id = %s",
+                [veiculo_id, data_entrada, observacoes, registo_id]
+            )
+    finally:
+        connection.close()
+
 
 def get_registo_entrada_id(registo_id):
-    with pgsql_conn.cursor() as cursor:
-        cursor.execute("SELECT * FROM registo_entrada WHERE id = %s", [registo_id])
-        row = cursor.fetchone()
-        if row:
-            columns = [col[0] for col in cursor.description]
-            return dict(zip(columns, row))
-        return None
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM registo_entradas WHERE id = %s", [registo_id])
+            result = cursor.fetchone()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return {
+                    'id': result[0],
+                    'veiculo_id': result[1],
+                    'data_entrada': result[2],
+                    'observacoes': result[3]
+                }
+            return None
+    finally:
+        connection.close()
 
 def remove_registo_entrada(registo_id):
-    with pgsql_conn.cursor() as cursor:
-        cursor.execute("DELETE FROM registo_entrada WHERE id = %s", [registo_id])
-        pgsql_conn.commit()
-        return cursor.rowcount
+    if registo_id is None:
+        raise ValueError("O campo 'registo_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM registo_entradas WHERE id = %s", [registo_id])
+    finally:
+        connection.close()
+
+def inserir_restauro(veiculo_id, data_inicio, data_fim, descricao):
+    if veiculo_id is None:
+        raise ValueError("O campo 'veiculo_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO restauros (veiculo_id, data_inicio, data_fim, descricao) VALUES (%s, %s, %s, %s)",
+                [veiculo_id, data_inicio, data_fim, descricao]
+            )
+    finally:
+        connection.close()
+
+def editar_restauro(restauro_id, veiculo_id, data_inicio, data_fim, descricao):
+    if restauro_id is None:
+        raise ValueError("O campo 'restauro_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE restauros SET veiculo_id = %s, data_inicio = %s, data_fim = %s, descricao = %s WHERE id = %s",
+                [veiculo_id, data_inicio, data_fim, descricao, restauro_id]
+            )
+    finally:
+        connection.close()
+
+def get_restauro_id(restauro_id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM restauros WHERE id = %s", [restauro_id])
+            result = cursor.fetchone()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return {
+                    'id': result[0],
+                    'veiculo_id': result[1],
+                    'data_inicio': result[2],
+                    'data_fim': result[3],
+                    'descricao': result[4]
+                }
+            return None
+    finally:
+        connection.close()
+
+def remove_restauro(restauro_id):
+    if restauro_id is None:
+        raise ValueError("O campo 'restauro_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM restauros WHERE id = %s", [restauro_id])
+    finally:
+        connection.close()
+

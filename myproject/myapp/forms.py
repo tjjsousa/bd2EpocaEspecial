@@ -19,4 +19,9 @@ class RegistoEntradaForm(forms.Form):
     veiculo_id = forms.CharField(widget=forms.HiddenInput())
     data_entrada = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     observacoes = forms.CharField(max_length=100)
-    
+
+class RestauroForm(forms.Form):
+    veiculo_id = forms.CharField(widget=forms.HiddenInput())
+    data_inicio = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    data_fim = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    descricao = forms.CharField(max_length=255)
