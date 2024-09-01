@@ -6,9 +6,12 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="mt-4">Veículos</h1>
-        <table class="table mt-4">
-            <thead>
+        <div class="d-flex justify-content-between align-items-center my-4">
+            <h1>Veiculos</h1>
+            <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-dark">
                 <tr>
                     <th>Marca</th>
                     <th>Modelo</th>
@@ -29,8 +32,8 @@
                         <td>{{ veiculo.matricula }}</td>
                         <td>{{veiculo.cliente}}</td>
                         <td>
-                            <a href="{% url 'veiculos_edit_view' veiculo.id %}" class="btn btn-primary">Editar</a>
-                            <a href="{% url 'veiculos_delete_view' veiculo.id %}" class="btn btn-danger">Apagar</a>
+                            <a href="{% url 'veiculos_edit_view' veiculo.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
+                            <a href="{% url 'veiculos_delete_view' veiculo.id %}" class="btn btn-danger btn-sm">Apagar</a>
                         </td>
                     </tr>
                 {% endfor %}
