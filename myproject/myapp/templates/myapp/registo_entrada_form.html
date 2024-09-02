@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Inserir Registo de Entrada</title>
     <!-- Adicionando Bootstrap -->
@@ -52,20 +53,21 @@
                 {{ form.observacoes }}
             </div>
             <button type="submit" class="btn btn-success">Salvar</button>
-            <a href="{% url 'registo_entradas_view' %}" class="btn btn-secondary">Voltar para a lista de registros de entrada</a>
+            <a href="{% url 'registo_entradas_view' %}" class="btn btn-secondary">Voltar para a lista de registros de
+                entrada</a>
         </form>
-        
-        
+
+
     </div>
     <!-- Adicionando scripts do Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const rows = document.querySelectorAll('table.table-hover tbody tr');
             rows.forEach(row => {
-                row.addEventListener('click', function() {
+                row.addEventListener('click', function () {
                     const veiculoId = this.getAttribute('data-id');
                     document.querySelector('input[name="veiculo_id"]').value = veiculoId;
                     rows.forEach(r => r.classList.remove('table-active'));
@@ -75,4 +77,5 @@
         });
     </script>
 </body>
+
 </html>

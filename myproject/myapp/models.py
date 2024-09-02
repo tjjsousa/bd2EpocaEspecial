@@ -43,10 +43,11 @@ class Restauro(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
     data_inicio = models.DateField()
     data_fim = models.DateField(null=True, blank=True)
-    status = models.CharField(max_length=50, null=True, blank=True)
+    status = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = "restauros"
+        managed = True
 
 class TarefaRestauro(models.Model):
     restauro = models.ForeignKey(Restauro, on_delete=models.CASCADE)
@@ -56,6 +57,7 @@ class TarefaRestauro(models.Model):
 
     class Meta:
         db_table = "tarefas_restauro"
+        managed = True
 
 class Faturacao(models.Model):
     restauro = models.ForeignKey(Restauro, on_delete=models.CASCADE)
@@ -66,6 +68,7 @@ class Faturacao(models.Model):
 
     class Meta:
         db_table = "faturacao"
+        managed = True
 
 class SaidaVeiculo(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
@@ -75,9 +78,11 @@ class SaidaVeiculo(models.Model):
 
     class Meta:
         db_table = "saidas_veiculos"
+        managed = True
 class TipoMaoObra(models.Model):
     descricao = models.CharField(max_length=100)
     custo_por_hora = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         db_table = "tipos_mao_obra"
+        managed = True

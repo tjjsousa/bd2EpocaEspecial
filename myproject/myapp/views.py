@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-from .database import inserir_cliente, inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro
+from .database import inserir_cliente, inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -127,10 +127,6 @@ def registo_entradas_view(request):
     data = RegistoEntrada.objects.all()
     return render(request, 'myapp/registo_entradas.html', {'data': data})
 
-def registo_entrada_detail_view(request, id):
-    registro = get_registo_entrada_id(id)
-    return render(request, 'myapp/registo_entrada_detail.html', {'registro': registro})
-
 def registo_entrada_edit_view(request, id):
     registro = get_registo_entrada_id(id)
     if request.method == "POST":
@@ -160,8 +156,8 @@ def registo_entrada_edit_view(request, id):
 
 def registo_entrada_delete_view(request, id):
     if request.method == "POST":
-        registo = get_object_or_404(RegistoEntrada, id=id)
-        registo.delete()
+        #registo = get_object_or_404(RegistoEntrada, id=id)
+        remove_registo_entrada(id)
         return JsonResponse({'success': True})
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 #REGISTO DE ENTRADAS
@@ -169,18 +165,18 @@ def registo_entrada_delete_view(request, id):
 #RESTAUROS
 def restauro_insert_view(request):
     if request.method == "POST":
-        form = Restauro(request.POST)
+        form = RestauroForm(request.POST)
         if form.is_valid():
             veiculo_id = form.cleaned_data.get('veiculo_id')
             data_inicio = form.cleaned_data.get('data_inicio')
             data_fim = form.cleaned_data.get('data_fim')
-            descricao = form.cleaned_data.get('descricao')
+            status = form.cleaned_data.get('status')
             
             if veiculo_id is None:
                 form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
             else:
                 # Inserir o registro de entrada
-                inserir_restauro(veiculo_id, data_inicio, data_fim, descricao)
+                inserir_restauro(veiculo_id, data_inicio, data_fim, status)
                 return redirect('restauros_view')
     else:
         form = RestauroForm()
@@ -188,51 +184,47 @@ def restauro_insert_view(request):
     # Buscar todos os veículos do MongoDB
     veiculos = get_all_veiculos()
     
-    return render(request, 'myapp/registo_entrada_form.html', {'form': form, 'veiculos': veiculos})
+    return render(request, 'myapp/restauro_form.html', {'form': form, 'veiculos': veiculos})
 
 def restauro_edit_view(request, id):
-    registro = get_restauro_id(id)
+    restauros = get_restauro_id(id)
     if request.method == "POST":
         form = RestauroForm(request.POST)
         if form.is_valid():
             veiculo_id = form.cleaned_data.get('veiculo_id')
             data_inicio = form.cleaned_data.get('data_inicio')
             data_fim = form.cleaned_data.get('data_fim')
-            descricao = form.cleaned_data.get('descricao')
+            status = form.cleaned_data.get('status')
             
             if veiculo_id is None:
                 form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
             else:
                 # Atualizar o registro de entrada
-                editar_restauro(id, veiculo_id, data_inicio, data_fim, descricao)
+                editar_restauro(id, veiculo_id, data_inicio, data_fim, status)
                 return redirect('restauros_view')
     else:
         form = RestauroForm(initial={
-            'veiculo_id': registro['veiculo_id'],
-            'data_inicio': registro['data_inicio'],
-            'data_fim': registro['data_fim'],
-            'descricao': registro['descricao']
+            'veiculo_id': restauros['veiculo_id'],
+            'data_inicio': restauros['data_inicio'],
+            'data_fim': restauros['data_fim'],
+            'status': restauros['status']
         })
     
     # Buscar todos os veículos do MongoDB
     veiculos = get_all_veiculos()
     
-    return render(request, 'myapp/registo_entrada_form.html', {'form': form, 'veiculos': veiculos})
+    return render(request, 'myapp/restauro_form.html', {'form': form, 'veiculos': veiculos})
 
 def restauro_delete_view(request, id):
-    registro = get_restauro_id(id)
     if request.method == "POST":
+        #restauro = get_object_or_404(Restauro, id=id)
         remove_restauro(id)
-        return redirect('restauros_view')
-    return render(request, 'myapp/registo_entrada_confirm_delete.html', {'registo': registro})
-
-def restauro_detail_view(request, id):
-    registro = get_restauro_id(id)
-    return render(request, 'myapp/registo_entrada_detail.html', {'registro': registro})
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
 def restauros_view(request):
-    data = Restauro.objects.all()
-    return render(request, 'myapp/restauros.html', {'data': data})
+    restauros = Restauro.objects.all()
+    return render(request, 'myapp/restauros.html', {'restauros': restauros})
 #RESTAUROS
 
 #TAREFAS DE RESTAURO    

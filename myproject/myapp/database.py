@@ -121,29 +121,50 @@ def remove_registo_entrada(registo_id):
     finally:
         connection.close()
 
-def inserir_restauro(veiculo_id, data_inicio, data_fim, descricao):
+def inserir_restauro(veiculo_id, data_inicio, data_fim, status):
     if veiculo_id is None:
         raise ValueError("O campo 'veiculo_id' não pode ser nulo.")
     
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO restauros (veiculo_id, data_inicio, data_fim, descricao) VALUES (%s, %s, %s, %s)",
-                [veiculo_id, data_inicio, data_fim, descricao]
+                "INSERT INTO restauros (veiculo_id, data_inicio, data_fim, status) VALUES (%s, %s, %s, %s)",
+                [veiculo_id, data_inicio, data_fim, status]
             )
     finally:
         connection.close()
 
-def editar_restauro(restauro_id, veiculo_id, data_inicio, data_fim, descricao):
+def editar_restauro(restauro_id, veiculo_id, data_inicio, data_fim, status):
     if restauro_id is None:
         raise ValueError("O campo 'restauro_id' não pode ser nulo.")
     
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                "UPDATE restauros SET veiculo_id = %s, data_inicio = %s, data_fim = %s, descricao = %s WHERE id = %s",
-                [veiculo_id, data_inicio, data_fim, descricao, restauro_id]
+                "UPDATE restauros SET veiculo_id = %s, data_inicio = %s, data_fim = %s, status = %s WHERE id = %s",
+                [veiculo_id, data_inicio, data_fim, status, restauro_id]
             )
+    finally:
+        connection.close()
+
+def get_all_restauros():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM restauros")
+            result = cursor.fetchall()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return [
+                    {
+                        'id': row[0],
+                        'veiculo_id': row[1],
+                        'data_inicio': row[2],
+                        'data_fim': row[3],
+                        'status': row[4]
+                    }
+                    for row in result
+                ]
+            return []
     finally:
         connection.close()
 
@@ -159,7 +180,7 @@ def get_restauro_id(restauro_id):
                     'veiculo_id': result[1],
                     'data_inicio': result[2],
                     'data_fim': result[3],
-                    'descricao': result[4]
+                    'status': result[4]
                 }
             return None
     finally:

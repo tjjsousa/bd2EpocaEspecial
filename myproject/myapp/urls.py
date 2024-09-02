@@ -26,9 +26,9 @@ urlpatterns = [
     #REGISTO ENTRADAS
     #RESTAUROS
     path('restauros/', views.restauros_view, name='restauros_view'),
-    path('restauros/create/', views.restauro_insert_view, name='restauro_insert_view'),
-    path('restauros/edit/<int:id>/', views.restauro_edit_view, name='restauro_edit_view'),
-    path('restauros/delete/<int:id>/', views.restauro_delete_view, name='restauro_delete_view'),
+    path('restauros_insert/', views.restauro_insert_view, name='restauro_insert_view'),
+    path('restauros_edit/<str:id>/', views.restauro_edit_view, name='restauro_edit_view'),
+    path('restauros_delete/<str:id>/', views.restauro_delete_view, name='restauro_delete_view'),
     #RESTAUROS
     #TAREFAS RESTAURO
     path('tarefas_restauro/', views.tarefas_restauro_view, name='tarefas_restauro_view'),
