@@ -31,3 +31,19 @@ class TarefaRestauroForm(forms.Form):
     descricao = forms.CharField(max_length=100)
     mao_obra = forms.CharField(max_length=100) #widget=forms.HiddenInput()
     custo_total = forms.FloatField()
+
+class FaturacaoForm(forms.Form):
+    restauro_id = forms.CharField(widget=forms.HiddenInput())
+    data = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    valor = forms.FloatField()
+    observacoes = forms.CharField(max_length=100)
+
+class TipoMaoObraForm(forms.Form):
+    descricao = forms.CharField(max_length=100)
+    custo_por_hora = forms.FloatField()
+
+class RegistoSaidasForm(forms.Form):
+    veiculo_id = forms.CharField(widget=forms.HiddenInput())
+    data_saida = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    condicoes_saida = forms.CharField(max_length=100)
+    observacoes = forms.CharField(max_length=100)

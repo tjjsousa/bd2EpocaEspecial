@@ -37,12 +37,19 @@ urlpatterns = [
     path('tarefas_restauro_delete/<str:id>/', views.tarefas_restauro_delete_view, name='tarefas_restauro_delete_view'),
     #TAREFAS RESTAURO
     #FATURACAO
-    path('faturacao/', views.faturacao_view, name='faturacao_view'),
+    path('faturacao_view/', views.faturacao_view, name='faturacao_view'),
     #FATURACAO
+
     #SAIDAS VEICULOS
-    path('saidas_veiculos/', views.saidas_veiculos_view, name='saidas_veiculos_view'),
+    path('saidas_veiculos/', views.registo_saidas_view, name='registo_saidas_view'),
+    path('saidas_veiculos_insert/', views.registo_saidas_insert_view, name='registo_saidas_insert_view'),
+    path('saidas_veiculos_edit/<str:id>/', views.registo_saidas_edit_view, name='registo_saidas_edit_view'),
+    path('saidas_veiculos_delete/<str:id>/', views.registo_saidas_delete_view, name='registo_saidas_delete_view'),
     #SAIDAS VEICULOS
     #TIPOS MAO OBRA
-    path('tipos_mao_obra/', views.tipos_mao_obra_view, name='tipos_mao_obra_view'),
+    path('registo_tipos_mao_obra/', views.registo_tipos_mao_obra_view, name='registo_tipos_mao_obra_view'),
+    path('registo_tipos_mao_obra_insert', views.registo_tipos_mao_obra_insert_view, name='registo_tipos_mao_obra_insert_view'),
+    path('registo_tipos_mao_obra_edit/<str:id>', views.registo_tipos_mao_obra_edit_view, name='registo_tipos_mao_obra_edit_view'),
+    path('registo_tipos_mao_obra_delete/<str:id>', views.registo_tipos_mao_obra_delete_view, name='registo_tipos_mao_obra_delete_view'),
     #TIPOS MAO OBRA
 ]

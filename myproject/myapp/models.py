@@ -38,7 +38,6 @@ class RegistoEntrada(models.Model):
         db_table = "registo_entradas"
         managed = True
 
-
 class Restauro(models.Model):
     veiculo = models.ForeignKey(Veiculo, on_delete=models.CASCADE)
     data_inicio = models.DateField()
@@ -79,6 +78,7 @@ class SaidaVeiculo(models.Model):
     class Meta:
         db_table = "saidas_veiculos"
         managed = True
+
 class TipoMaoObra(models.Model):
     descricao = models.CharField(max_length=100)
     custo_por_hora = models.DecimalField(max_digits=10, decimal_places=2)
@@ -86,3 +86,4 @@ class TipoMaoObra(models.Model):
     class Meta:
         db_table = "tipos_mao_obra"
         managed = True
+

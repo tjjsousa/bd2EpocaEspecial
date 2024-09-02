@@ -93,7 +93,6 @@ def editar_registo_entrada(registo_id, veiculo_id, data_entrada, observacoes):
     finally:
         connection.close()
 
-
 def get_registo_entrada_id(registo_id):
     try:
         with connection.cursor() as cursor:
@@ -196,7 +195,6 @@ def remove_restauro(restauro_id):
     finally:
         connection.close()
 
-
 def inserir_tarefa_restauro(restauro_id, descricao, mao_obra, custo_total):
     if restauro_id is None:
         raise ValueError("O campo 'restauro_id' não pode ser nulo.")
@@ -248,5 +246,171 @@ def remove_tarefa_restauro(tarefa_id):
     try:
         with connection.cursor() as cursor:
             cursor.execute("DELETE FROM tarefas_restauro WHERE id = %s", [tarefa_id])
+    finally:
+        connection.close()
+
+#relativo a faturação
+def inserir_fatura(cliente_id, veiculo_id, data, valor_total):
+    if cliente_id is None:
+        raise ValueError("O campo 'cliente_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO faturas (cliente_id, veiculo_id, data, valor_total) VALUES (%s, %s, %s, %s)",
+                [cliente_id, veiculo_id, data, valor_total]
+            )
+    finally:
+        connection.close()
+
+def editar_fatura(fatura_id, cliente_id, veiculo_id, data, valor_total):
+    if fatura_id is None:
+        raise ValueError("O campo 'fatura_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE faturas SET cliente_id = %s, veiculo_id = %s, data = %s, valor_total = %s WHERE id = %s",
+                [cliente_id, veiculo_id, data, valor_total, fatura_id]
+            )
+    finally:
+        connection.close()
+
+def get_fatura_id(fatura_id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM faturas WHERE id = %s", [fatura_id])
+            result = cursor.fetchone()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return {
+                    'id': result[0],
+                    'cliente_id': result[1],
+                    'veiculo_id': result[2],
+                    'data': result[3],
+                    'valor_total': result[4]
+                }
+            return None
+    finally:
+        connection.close()
+
+def remove_fatura(fatura_id):
+    if fatura_id is None:
+        raise ValueError("O campo 'fatura_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM faturas WHERE id = %s", [fatura_id])
+    finally:
+        connection.close()
+
+#relativo a tipos de mão de obra
+def inserir_tipos_mao_obra(descricao, custo_por_hora):
+    if descricao is None:
+        raise ValueError("O campo descrição não pode ser nulo.")
+
+    if custo_por_hora is None:
+        raise ValueError("O campo custo_por_hora não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO tipos_mao_obra (descricao, custo_por_hora) VALUES (%s, %s)",
+                [descricao, custo_por_hora]
+            )
+    finally:
+        connection.close()
+
+def editar_tipos_mao_obra(id, descricao, custo_por_hora):
+    if id is None:
+        raise ValueError("O campo 'id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE tipos_mao_obra SET descricao = %s, custo_por_hora = %s WHERE id = %s",
+                [descricao, custo_por_hora, id]
+            )
+    finally:
+        connection.close()
+
+def get_tipo_mao_obra_id(id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM tipos_mao_obra WHERE id = %s", [id])
+            result = cursor.fetchone()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return {
+                    'id': result[0],
+                    'descricao': result[1],
+                    'custo_por_hora': result[2]
+                }
+            return None
+    finally:
+        connection.close()
+
+def remove_tipos_mao_obra(id):
+    if id is None:
+        raise ValueError("O campo 'id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM tipos_mao_obra WHERE id = %s", [id])
+    finally:
+        connection.close()
+
+
+#relativo a saidas de veiculos
+def inserir_registo_saidas(veiculo_id, data_saida, condicoes_saida, observacoes):
+    if veiculo_id is None:
+        raise ValueError("O campo 'veiculo_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO saidas_veiculos (veiculo_id, data_saida, condicoes_saida, observacoes) VALUES (%s, %s, %s, %s)",
+                [veiculo_id, data_saida, condicoes_saida, observacoes]
+            )
+    finally:
+        connection.close()
+
+def editar_registo_saidas(id, veiculo_id, data_saida, condicoes_saida, observacoes):
+    if id is None:
+        raise ValueError("O campo 'id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE saidas_veiculos SET veiculo_id = %s, data_saida = %s, condicoes_saida = %s, observacoes = %s WHERE id = %s",
+                [veiculo_id, data_saida, condicoes_saida, observacoes, id]
+            )
+    finally:
+        connection.close()
+
+def remove_registo_saidas(id):
+    if id is None:
+        raise ValueError("O campo 'id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM saidas_veiculos WHERE id = %s", [id])
+    finally:
+        connection.close()
+
+def get_registo_saidas_id(id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM saidas_veiculos WHERE id = %s", [id])
+            result = cursor.fetchone()
+            if result:
+                return {
+                    'id': result[0],
+                    'veiculo_id': result[1],
+                    'data_saida': result[2],
+                    'condicoes_saida': result[3],
+                    'observacoes': result[4]
+                }
+            return None
     finally:
         connection.close()

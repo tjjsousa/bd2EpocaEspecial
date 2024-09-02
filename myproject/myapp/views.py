@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
-from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm
+from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-from .database import get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro,inserir_tarefa_restauro,inserir_cliente, inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros
+from .database import get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro,inserir_tarefa_restauro,inserir_cliente, inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -254,7 +254,6 @@ def tarefas_restauro_insert_view(request):
     
     return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros})
 
-
 def tarefas_restauro_edit_view(request, id):
     tarefa_restauro = get_tarefa_restauro_id(id)
     if request.method == "POST":
@@ -298,17 +297,126 @@ def tarefas_restauro_delete_view(request, id):
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
 
-#TAREFAS DE RESTAURO
-
-
-def faturacao_view(request):
+#FATURAÇÃO
+def faturacao_view(request): 
     data = Faturacao.objects.all()
     return render(request, 'myapp/faturacao.html', {'data': data})
 
-def saidas_veiculos_view(request):
+#FATURAÇÃO
+
+
+#TIPOS MAO OBRA
+
+def registo_tipos_mao_obra_insert_view(request):
+    if request.method == "POST":
+        form = TipoMaoObraForm(request.POST)
+        if form.is_valid():
+            descricao = form.cleaned_data.get('descricao')
+            custo_por_hora = form.cleaned_data.get('custo_por_hora')
+            
+            
+            # Inserir o registro de entrada
+            inserir_tipos_mao_obra(descricao, custo_por_hora)
+            return redirect('registo_tipos_mao_obra_view')
+    else:
+        form = TipoMaoObraForm()
+    
+    return render(request, 'myapp/tipos_mao_obra_form.html', {'form': form})
+
+def registo_tipos_mao_obra_view(request):
+    data = TipoMaoObra.objects.all()
+    return render(request, 'myapp/tipos_mao_obra.html', {'data': data})
+
+def registo_tipos_mao_obra_edit_view(request, id):
+    registro = get_tipo_mao_obra_id(id)
+    if request.method == "POST":
+        form = TipoMaoObraForm(request.POST)
+        if form.is_valid():
+            descricao = form.cleaned_data.get('descricao')
+            custo_por_hora = form.cleaned_data.get('custo_por_hora')
+            
+           
+            # Atualizar o registro de entrada
+            editar_tipos_mao_obra(id, descricao, custo_por_hora)
+            return redirect('registo_tipos_mao_obra_view')
+    else:
+        form = TipoMaoObraForm(initial={
+            'descricao': registro['descricao'],
+            'custo_por_hora': registro['custo_por_hora']
+        })
+    
+    return render(request, 'myapp/tipos_mao_obra_form.html', {'form': form})
+
+def registo_tipos_mao_obra_delete_view(request, id):
+    if request.method == "POST":
+        #registro = get_object_or_404(TipoMaoObra, id=id)
+        remove_tipos_mao_obra(id)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+#TIPOS MAO OBRA
+
+
+#saida veiculos
+def registo_saidas_insert_view(request):
+    if request.method == "POST":
+        form = RegistoSaidasForm(request.POST)
+        if form.is_valid():
+            veiculo_id = form.cleaned_data.get('veiculo_id')
+            data_saida = form.cleaned_data.get('data_saida')
+            condicoes_saida = form.cleaned_data.get('condicoes_saida')
+            observacoes = form.cleaned_data.get('observacoes')
+            
+            if veiculo_id is None:
+                form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
+            else:
+                # Inserir o registro de entrada
+                inserir_registo_saidas(veiculo_id, data_saida, condicoes_saida, observacoes)
+                return redirect('registo_saidas_view')
+    else:
+        form = RegistoSaidasForm()
+    
+    # Buscar todos os veículos do MongoDB
+    veiculos = get_all_veiculos()
+    
+    return render(request, 'myapp/registo_saidas_form.html', {'form': form, 'veiculos': veiculos})
+
+def registo_saidas_view(request):
     data = SaidaVeiculo.objects.all()
     return render(request, 'myapp/saidas_veiculos.html', {'data': data})
 
-def tipos_mao_obra_view(request):
-    data = TipoMaoObra.objects.all()
-    return render(request, 'myapp/tipos_mao_obra.html', {'data': data})
+def registo_saidas_edit_view(request, id):
+    registro = get_registo_saidas_id(id)
+    if request.method == "POST":
+        form = RegistoSaidasForm(request.POST)
+        if form.is_valid():
+            veiculo_id = form.cleaned_data.get('veiculo_id')
+            data_saida = form.cleaned_data.get('data_saida')
+            condicoes_saida = form.cleaned_data.get('condicoes_saida')
+            observacoes = form.cleaned_data.get('observacoes')
+            
+            if veiculo_id is None:
+                form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
+            else:
+                # Atualizar o registro de entrada
+                editar_registo_saidas(id, veiculo_id, data_saida, condicoes_saida, observacoes)
+                return redirect('registo_saidas_view')
+    else:
+        form = RegistoSaidasForm(initial={
+            'veiculo_id': registro['veiculo_id'],
+            'data_saida': registro['data_saida'],
+            'condicoes_saida': registro['condicoes_saida'],
+            'observacoes': registro['observacoes']
+        })
+    
+    # Buscar todos os veículos do MongoDB
+    veiculos = get_all_veiculos()
+    
+    return render(request, 'myapp/registo_saidas_form.html', {'form': form, 'veiculos': veiculos})
+
+def registo_saidas_delete_view(request, id):
+    if request.method == "POST":
+        #registro = get_object_or_404(SaidaVeiculo, id=id
+        print(id)
+        remove_registo_saidas(id)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
