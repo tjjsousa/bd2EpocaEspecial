@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Inserir Registo de Entrada</title>
+    <title>Inserir Tarefa de Restauro</title>
     <!-- Adicionando Bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <style>
@@ -14,46 +14,48 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="my-4">Inserir Registo de Entrada</h1>
+        <h1 class="my-4">Inserir Tarefa de Restauro</h1>
         <form method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
-            {{ form.veiculo_id }}
-            <h2 class="my-4">Selecione um Veículo</h2>
+            {{ form.restauro_id }}
+            <h2 class="my-4">Selecione um Restauro</h2>
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
-                        <th>ID</th>
-                        <th>Marca</th>
-                        <th>Modelo</th>
-                        <th>Matrícula</th>
-                        <th>Cor</th>
-                        <th>Ano</th>
+                        <th>ID Restauro</th>
+                        <th>veiculo</th>
+                        <th>Data de Inicio</th>
+                        <th>Data de Fim</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for veiculo in veiculos %}
-                    <tr data-id="{{ veiculo.id }}">
-                        <td>{{ veiculo.id }}</td>
-                        <td>{{ veiculo.marca }}</td>
-                        <td>{{ veiculo.modelo }}</td>
-                        <td>{{ veiculo.matricula }}</td>
-                        <td>{{ veiculo.cor }}</td>
-                        <td>{{ veiculo.ano }}</td>
+                    {% for restauro in restauros %}
+                    <tr data-id="{{ restauro.id }}">
+                        <td>{{ restauro.id }}</td>
+                        <td>{{ restauro.veiculo_id }}</td>
+                        <td>{{ restauro.data_inicio }}</td>
+                        <td>{{ restauro.data_fim }}</td>
+                        <td>{{ restauro.status }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
             <div class="form-group">
-                <label for="data_entrada">Data de Entrada</label>
-                {{ form.data_entrada }}
+                <label for="descricao">Descrição</label>
+                {{ form.descricao }}
             </div>
             <div class="form-group">
-                <label for="observacoes">Observações</label>
-                {{ form.observacoes }}
+                <label for="mao_obra">Mão de Obra</label>
+                {{ form.mao_obra }}
+            </div>
+            <div class="form-group">
+                <label for="custo_total">Custo Total</label>
+                {{ form.custo_total }}
             </div>
             <button type="submit" class="btn btn-success">Salvar</button>
-            <a href="{% url 'registo_entradas_view' %}" class="btn btn-secondary">Voltar para a lista de registros de entrada</a>
+            <a href="{% url 'tarefas_restauro_view' %}" class="btn btn-secondary">Voltar para a lista de tarefas de restauro</a>
         </form>
 
 
@@ -67,8 +69,8 @@
             const rows = document.querySelectorAll('table.table-hover tbody tr');
             rows.forEach(row => {
                 row.addEventListener('click', function () {
-                    const veiculoId = this.getAttribute('data-id');
-                    document.querySelector('input[name="veiculo_id"]').value = veiculoId;
+                    const restauroId = this.getAttribute('data-id');
+                    document.querySelector('input[name="restauro_id"]').value = restauroId;
                     rows.forEach(r => r.classList.remove('table-active'));
                     this.classList.add('table-active');
                 });
@@ -76,5 +78,4 @@
         });
     </script>
 </body>
-
 </html>

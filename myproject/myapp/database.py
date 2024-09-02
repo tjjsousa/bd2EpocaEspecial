@@ -196,3 +196,57 @@ def remove_restauro(restauro_id):
     finally:
         connection.close()
 
+
+def inserir_tarefa_restauro(restauro_id, descricao, mao_obra, custo_total):
+    if restauro_id is None:
+        raise ValueError("O campo 'restauro_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO tarefas_restauro (restauro_id, descricao, mao_obra, custo_total) VALUES (%s, %s, %s, %s)",
+                [restauro_id, descricao, mao_obra, custo_total]
+            )
+    finally:
+        connection.close()
+
+def get_tarefa_restauro_id(restauro_id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM tarefas_restauro WHERE id = %s", [restauro_id])
+            result = cursor.fetchone()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return {
+                    'id': result[0],
+                    'restauro_id': result[1],
+                    'descricao': result[2],
+                    'mao_obra': result[3],
+                    'custo_total': result[4]
+                }
+            return None
+    finally:
+        connection.close()
+
+def editar_tarefa_restauro(tarefa_id, restauro_id, descricao, mao_obra, custo_total):
+    if tarefa_id is None:
+        raise ValueError("O campo 'tarefa_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute(
+                "UPDATE tarefas_restauro SET restauro_id = %s, descricao = %s, mao_obra = %s, custo_total = %s WHERE id = %s",
+                [restauro_id, descricao, mao_obra, custo_total, tarefa_id]
+            )
+    finally:
+        connection.close()
+
+def remove_tarefa_restauro(tarefa_id):
+    if tarefa_id is None:
+        raise ValueError("O campo 'tarefa_id' não pode ser nulo.")
+    
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM tarefas_restauro WHERE id = %s", [tarefa_id])
+    finally:
+        connection.close()

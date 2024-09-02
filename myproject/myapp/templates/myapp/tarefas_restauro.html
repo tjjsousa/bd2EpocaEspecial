@@ -1,14 +1,107 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tarefas de Restauro</title>
+    <title>Lista de Tarefas de Restauro</title>
+    <!-- Adicionando Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Tarefas de Restauro</h1>
-    <ul>
-        {% for tarefa in data %}
-            <li>Restauro: {{ tarefa.restauro.id }} - Descrição: {{ tarefa.descricao }} - Mão de Obra: {{ tarefa.mao_obra }} - Custo Total: {{ tarefa.custo_total }}</li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center my-4">
+            <h1>Lista de Tarefas de Restauro</h1>
+            <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
+            
+        </div>
+        {% if data %}
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Restauro</th>
+                    <th>Descrição</th>
+                    <th>Mao de Obra</th>
+                    <th>Custo Total</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarefas_restauro in data %}
+                <tr>
+                    <td>{{ tarefas_restauro.id }}</td>
+                    <td>{{ tarefas_restauro.restauro_id }}</td>
+                    <td>{{ tarefas_restauro.descricao }}</td>
+                    <td>{{ tarefas_restauro.mao_obra }}</td>
+                    <td>{{ tarefas_restauro.custo_total }}</td>
+                    <td>
+                        <a href="{% url 'tarefas_restauro_edit_view' tarefas_restauro.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
+                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-id="{{ restauro.id }}">Apagar</button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p>Nenhum restauro encontrado.</p>
+        {% endif %}
+        <a href="{% url 'tarefas_restauro_insert_view' %}" class="btn btn-success">Adicionar Tarefas de Restauro</a>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza de que deseja excluir a tarefa de restauro com ID <span id="modal-tarefa-restauro-id"></span>?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $('#deleteModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);
+            var tarefaRestauroId = button.data('id');
+            console.log('Tarefa de Restauro ID:', tarefaRestauroId);
+            var modal = $(this);
+            modal.find('#modal-tarefa-restauro-id').text(tarefaRestauroId);
+            modal.find('#confirm-delete').data('id', tarefaRestauroId);
+        });
+
+        $('#confirm-delete').on('click', function () {
+            var tarefaRestauroId = $(this).data('id');
+            $.ajax({
+                url: '/myapp/tarefas_restauro_delete/' + tarefaRestauroId + '/',
+                type: 'POST',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                success: function (response) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        
+                        alert('Erro ao excluir a tarefa de restauro.');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log('Delete error:', error); // Log para verificar o erro
+                    alert('Erro ao excluir o registro.');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

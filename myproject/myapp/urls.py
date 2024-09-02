@@ -32,6 +32,9 @@ urlpatterns = [
     #RESTAUROS
     #TAREFAS RESTAURO
     path('tarefas_restauro/', views.tarefas_restauro_view, name='tarefas_restauro_view'),
+    path('tarefas_restauro_insert/', views.tarefas_restauro_insert_view, name='tarefas_restauro_insert_view'),
+    path('tarefas_restauro_edit/<str:id>/', views.tarefas_restauro_edit_view, name='tarefas_restauro_edit_view'),
+    path('tarefas_restauro_delete/<str:id>/', views.tarefas_restauro_delete_view, name='tarefas_restauro_delete_view'),
     #TAREFAS RESTAURO
     #FATURACAO
     path('faturacao/', views.faturacao_view, name='faturacao_view'),

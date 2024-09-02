@@ -25,3 +25,9 @@ class RestauroForm(forms.Form):
     data_inicio = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     data_fim = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
     status = forms.CharField(max_length=255)
+
+class TarefaRestauroForm(forms.Form):
+    restauro_id = forms.CharField(widget=forms.HiddenInput())
+    descricao = forms.CharField(max_length=100)
+    mao_obra = forms.CharField(max_length=100) #widget=forms.HiddenInput()
+    custo_total = forms.FloatField()
