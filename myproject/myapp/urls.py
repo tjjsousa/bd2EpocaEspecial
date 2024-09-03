@@ -38,6 +38,10 @@ urlpatterns = [
     #TAREFAS RESTAURO
     #FATURACAO
     path('faturacao_view/', views.faturacao_view, name='faturacao_view'),
+    path('faturacao_insert/', views.faturacao_insert_view, name='faturacao_insert_view'),
+    path('faturacao_edit/<str:id>/', views.faturacao_edit_view, name='faturacao_edit_view'),
+    path('faturacao_delete/<str:id>/', views.faturacao_delete_view, name='faturacao_delete_view'),
+
     #FATURACAO
 
     #SAIDAS VEICULOS

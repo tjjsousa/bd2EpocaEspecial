@@ -300,7 +300,65 @@ def tarefas_restauro_delete_view(request, id):
 #FATURAÇÃO
 def faturacao_view(request): 
     data = Faturacao.objects.all()
-    return render(request, 'myapp/faturacao.html', {'data': data})
+    return render(request, 'myapp/faturacao.html', {'data': data}) 
+
+def faturacao_insert_view(request):
+    if request.method == "POST":
+        form = FaturacaoForm(request.POST)
+        if form.is_valid():
+            veiculo_id = form.cleaned_data.get('veiculo_id')
+            data = form.cleaned_data.get('data')
+            valor = form.cleaned_data.get('valor')
+            
+            if veiculo_id is None:
+                form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
+            else:
+                # Inserir o registro de entrada
+                inserir_faturacao(veiculo_id, data, valor)
+                return redirect('faturacao_view')
+    else:
+        form = FaturacaoForm()
+    
+    # Buscar todos os veículos do MongoDB
+    veiculos = get_all_veiculos()
+    
+    return render(request, 'myapp/faturacao_form.html', {'form': form, 'veiculos': veiculos})
+
+def faturacao_edit_view(request, id):
+    registro = get_faturacao_id(id)
+    if request.method == "POST":
+        form = FaturacaoForm(request.POST)
+        if form.is_valid():
+            veiculo_id = form.cleaned_data.get('veiculo_id')
+            data = form.cleaned_data.get('data')
+            valor = form.cleaned_data.get('valor')
+            
+            if veiculo_id is None:
+                form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
+            else:
+                # Atualizar o registro de entrada
+                editar_faturacao(id, veiculo_id, data, valor)
+                return redirect('faturacao_view')
+    else:
+        form = FaturacaoForm(initial={
+            'veiculo_id': registro['veiculo_id'],
+            'data': registro['data'],
+            'valor': registro['valor']
+        })
+
+def faturacao_delete_view(request, id):
+    if request.method == "POST":
+        #registro = get_object_or_404(Faturacao, id=id)
+        remove_faturacao(id)
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+
+
+    
+    # Buscar todos os veículos do MongoDB
+    veiculos = get_all_veiculos()
+    
+    return render(request, 'myapp/faturacao_form.html', {'form': form, 'veiculos': veiculos})
 
 #FATURAÇÃO
 
@@ -356,7 +414,7 @@ def registo_tipos_mao_obra_delete_view(request, id):
 #TIPOS MAO OBRA
 
 
-#saida veiculos
+#SAIDA DE VEICULOS
 def registo_saidas_insert_view(request):
     if request.method == "POST":
         form = RegistoSaidasForm(request.POST)
@@ -420,3 +478,4 @@ def registo_saidas_delete_view(request, id):
         remove_registo_saidas(id)
         return JsonResponse({'success': True})
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
+#SAIDA DE VEICULOS

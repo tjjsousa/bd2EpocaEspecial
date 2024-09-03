@@ -250,7 +250,7 @@ def remove_tarefa_restauro(tarefa_id):
         connection.close()
 
 #relativo a faturação
-def inserir_fatura(cliente_id, veiculo_id, data, valor_total):
+def inserir_faturacao(cliente_id, veiculo_id, data, valor_total):
     if cliente_id is None:
         raise ValueError("O campo 'cliente_id' não pode ser nulo.")
     
@@ -263,7 +263,7 @@ def inserir_fatura(cliente_id, veiculo_id, data, valor_total):
     finally:
         connection.close()
 
-def editar_fatura(fatura_id, cliente_id, veiculo_id, data, valor_total):
+def editar_faturacao(fatura_id, cliente_id, veiculo_id, data, valor_total):
     if fatura_id is None:
         raise ValueError("O campo 'fatura_id' não pode ser nulo.")
     
@@ -294,7 +294,7 @@ def get_fatura_id(fatura_id):
     finally:
         connection.close()
 
-def remove_fatura(fatura_id):
+def remove_faturacao(fatura_id):
     if fatura_id is None:
         raise ValueError("O campo 'fatura_id' não pode ser nulo.")
     
