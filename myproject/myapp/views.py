@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-from .database import get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro,inserir_tarefa_restauro,inserir_cliente, inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
+from .database import get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro,inserir_tarefa_restauro,inserir_cliente, inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -256,23 +256,27 @@ def tarefas_restauro_insert_view(request):
             descricao = form.cleaned_data.get('descricao')
             mao_obra = form.cleaned_data.get('mao_obra')
             custo_total = form.cleaned_data.get('custo_total')
+            tempo = form.cleaned_data.get('tempo')
+            
+            print(f"Restauro ID: {restauro_id}")
+            print(f"Descrição: {descricao}")
+            print(f"Mão de Obra: {mao_obra}")
+            print(f"Custo Total: {custo_total}")
+            print(f"Tempo: {tempo}")
             
             if restauro_id is None:
                 form.add_error('restauro_id', 'O campo Restauro ID é obrigatório.')
             else:
-                # Inserir o registro de entrada
-                inserir_tarefa_restauro(restauro_id, descricao, mao_obra, custo_total)
+                inserir_tarefa_restauro(restauro_id, descricao, mao_obra, custo_total, tempo)
                 return redirect('tarefas_restauro_view')
     else:
         form = TarefaRestauroForm()
     
-    # Buscar todos os veículos do MongoDB
 
-    #MUDAR ISTO PARA TIPO MAO DE OBRA ACHO EU
-    veiculos = get_all_veiculos()
+    tipos_mao_De_obra = get_all_tipos_mao_obra()
     restauros = get_all_restauros()
     
-    return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros})
+    return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros , 'tipos_mao_obra': tipos_mao_De_obra})
 
 def tarefas_restauro_edit_view(request, id):
     tarefa_restauro = get_tarefa_restauro_id(id)
@@ -283,30 +287,38 @@ def tarefas_restauro_edit_view(request, id):
             descricao = form.cleaned_data.get('descricao')
             mao_obra = form.cleaned_data.get('mao_obra')
             custo_total = form.cleaned_data.get('custo_total')
+            tempo = form.cleaned_data.get('tempo')
+            
+            print(f"Restauro ID: {restauro_id}")
+            print(f"Descrição: {descricao}")
+            print(f"Mão de Obra: {mao_obra}")
+            print(f"Custo Total: {custo_total}")
+            print(f"Tempo: {tempo}")
             
             if restauro_id is None:
                 form.add_error('restauro_id', 'O campo Restauro ID é obrigatório.')
             else:
                 # Atualizar o registro de entrada
-                editar_tarefa_restauro(id, restauro_id, descricao, mao_obra, custo_total)
+                editar_tarefa_restauro(id, restauro_id, descricao, mao_obra, custo_total,tempo)
                 return redirect('tarefas_restauro_view')
     else:
         form = TarefaRestauroForm(initial={
             'restauro_id': tarefa_restauro['restauro_id'],
             'descricao': tarefa_restauro['descricao'],
             'mao_obra': tarefa_restauro['mao_obra'],
-            'custo_total': tarefa_restauro['custo_total']
+            'custo_total': tarefa_restauro['custo_total'],
+            'tempo': tarefa_restauro['tempo']
         })
     
     # Buscar todos os veículos do MongoDB
-    veiculos = get_all_veiculos()
+    tipos_mao_De_obra = get_all_tipos_mao_obra()
     restauros = get_all_restauros()
     
-    return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros})
+    return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros , 'tipos_mao_obra': tipos_mao_De_obra})
 
 
 def tarefas_restauro_view(request):
-    data = TarefaRestauro.objects.all()
+    data = get_all_tarefas_restauro()
     return render(request, 'myapp/tarefas_restauro.html', {'data': data})
 
 def tarefas_restauro_delete_view(request, id):

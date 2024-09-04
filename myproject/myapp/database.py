@@ -195,16 +195,38 @@ def remove_restauro(restauro_id):
     finally:
         connection.close()
 
-def inserir_tarefa_restauro(restauro_id, descricao, mao_obra, custo_total):
+def inserir_tarefa_restauro(restauro_id, descricao, mao_obra, custo_total, tempo):
     if restauro_id is None:
         raise ValueError("O campo 'restauro_id' não pode ser nulo.")
     
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                "INSERT INTO tarefas_restauro (restauro_id, descricao, mao_obra, custo_total) VALUES (%s, %s, %s, %s)",
-                [restauro_id, descricao, mao_obra, custo_total]
+                "INSERT INTO tarefas_restauro (restauro_id, descricao, mao_obra, custo_total , tempo) VALUES (%s, %s, %s, %s , %s)",
+                [restauro_id, descricao, mao_obra, custo_total, tempo]
             )
+    finally:
+        connection.close()
+
+def get_all_tarefas_restauro():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM tarefas_restauro")
+            result = cursor.fetchall()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return [
+                    {
+                        'id': row[0],
+                        'restauro_id': row[1],
+                        'descricao': row[2],
+                        'mao_obra': row[3],
+                        'custo_total': row[4],
+                        'tempo': row[5]
+                    }
+                    for row in result
+                ]
+            return []
     finally:
         connection.close()
 
@@ -220,21 +242,22 @@ def get_tarefa_restauro_id(restauro_id):
                     'restauro_id': result[1],
                     'descricao': result[2],
                     'mao_obra': result[3],
-                    'custo_total': result[4]
+                    'custo_total': result[4],
+                    'tempo': result[5]
                 }
             return None
     finally:
         connection.close()
 
-def editar_tarefa_restauro(tarefa_id, restauro_id, descricao, mao_obra, custo_total):
+def editar_tarefa_restauro(tarefa_id, restauro_id, descricao, mao_obra, custo_total, tempo):
     if tarefa_id is None:
         raise ValueError("O campo 'tarefa_id' não pode ser nulo.")
     
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                "UPDATE tarefas_restauro SET restauro_id = %s, descricao = %s, mao_obra = %s, custo_total = %s WHERE id = %s",
-                [restauro_id, descricao, mao_obra, custo_total, tarefa_id]
+                "UPDATE tarefas_restauro SET restauro_id = %s, descricao = %s, mao_obra = %s, custo_total = %s , tempo = %s WHERE id = %s",
+                [restauro_id, descricao, mao_obra, custo_total, tempo , tarefa_id]
             )
     finally:
         connection.close()
@@ -412,5 +435,25 @@ def get_registo_saidas_id(id):
                     'observacoes': result[4]
                 }
             return None
+    finally:
+        connection.close()
+        
+        
+def get_all_tipos_mao_obra():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM tipos_mao_obra")
+            result = cursor.fetchall()
+            if result:
+                # Acesse os elementos da tupla usando índices inteiros
+                return [
+                    {
+                        'id': row[0],
+                        'descricao': row[1],
+                        'custo_por_hora': row[2]
+                    }
+                    for row in result
+                ]
+            return []
     finally:
         connection.close()

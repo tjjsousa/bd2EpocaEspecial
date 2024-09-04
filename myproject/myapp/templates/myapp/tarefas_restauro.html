@@ -21,6 +21,7 @@
                     <th>Descrição</th>
                     <th>Mao de Obra</th>
                     <th>Custo Total</th>
+                    <th>Tempo</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -32,6 +33,7 @@
                     <td>{{ tarefas_restauro.descricao }}</td>
                     <td>{{ tarefas_restauro.mao_obra }}</td>
                     <td>{{ tarefas_restauro.custo_total }}</td>
+                    <td>{{ tarefas_restauro.tempo }}</td>
                     <td>
                         <a href="{% url 'tarefas_restauro_edit_view' tarefas_restauro.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
                         <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-id="{{ restauro.id }}">Apagar</button>

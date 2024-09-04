@@ -37,10 +37,12 @@ class RestauroForm(forms.Form):
     status = forms.CharField(max_length=255)
 
 class TarefaRestauroForm(forms.Form):
-    restauro_id = forms.CharField(widget=forms.HiddenInput())
-    descricao = forms.CharField(max_length=100)
-    mao_obra = forms.CharField(max_length=100) #widget=forms.HiddenInput()
-    custo_total = forms.FloatField()
+    restauro = forms.CharField(widget=forms.HiddenInput())
+    descricao = forms.CharField(max_length=255)
+    mao_obra = forms.CharField(max_length=255)
+    custo_total = forms.CharField(max_length=255)
+    tempo = forms.CharField(max_length=255)
+
 
 class FaturacaoForm(forms.Form):
     restauro_id = forms.CharField(widget=forms.HiddenInput())

@@ -37,6 +37,7 @@
       </div>
       
       <input type="submit" class="btn btn-primary my-4" value="{% if not id %}Inserir{% else %}Editar{% endif %}">
+      <a href="{% url 'clientes_view' %}" class="btn btn-secondary">Voltar para a lista clientes</a>
     </form>
   </div>
 </body>

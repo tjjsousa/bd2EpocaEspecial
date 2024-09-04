@@ -15,67 +15,43 @@
 <body>
     <div class="container">
         <h1 class="my-4">Inserir Tarefa de Restauro</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            {{ form.restauro_id }}
-            <h2 class="my-4">Selecione um Restauro</h2>
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>ID Restauro</th>
-                        <th>veiculo</th>
-                        <th>Data de Inicio</th>
-                        <th>Data de Fim</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for restauro in restauros %}
-                    <tr data-id="{{ restauro.id }}">
-                        <td>{{ restauro.id }}</td>
-                        <td>{{ restauro.veiculo_id }}</td>
-                        <td>{{ restauro.data_inicio }}</td>
-                        <td>{{ restauro.data_fim }}</td>
-                        <td>{{ restauro.status }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="form-group">
-                <label for="descricao">Descrição</label>
-                {{ form.descricao }}
-            </div>
-            <div class="form-group">
-                <label for="mao_obra">Mão de Obra</label>
-                {{ form.mao_obra }}
-            </div>
-            <div class="form-group">
-                <label for="custo_total">Custo Total</label>
-                {{ form.custo_total }}
-            </div>
-            <button type="submit" class="btn btn-success">Salvar</button>
-            <a href="{% url 'tarefas_restauro_view' %}" class="btn btn-secondary">Voltar para a lista de tarefas de restauro</a>
-        </form>
-
-
+<form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="form-group">
+        <label for="restauro_id">Selecione um Restauro</label>
+        <select id="restauro_id" name="restauro_id" class="form-control">
+            {% for restauro in restauros %}
+            <option value="{{ restauro.id }}">
+                ID: {{ restauro.id }} - Veículo: {{ restauro.veiculo_id }} - Início: {{ restauro.data_inicio }} - Fim: {{ restauro.data_fim }} - Status: {{ restauro.status }}
+            </option>
+            {% endfor %}
+        </select>
     </div>
-    <!-- Adicionando scripts do Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('table.table-hover tbody tr');
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const restauroId = this.getAttribute('data-id');
-                    document.querySelector('input[name="restauro_id"]').value = restauroId;
-                    rows.forEach(r => r.classList.remove('table-active'));
-                    this.classList.add('table-active');
-                });
-            });
-        });
-    </script>
+    <div class="form-group">
+        <label for="mao_obra">Selecione o Tipo de Mão de Obra</label>
+        <select id="mao_obra" name="mao_obra" class="form-control">
+            {% for mao_obra in tipos_mao_obra %}
+            <option value="{{ mao_obra.id }}">
+                ID: {{ mao_obra.id }} - Descrição: {{ mao_obra.descricao }} - Custo: {{ mao_obra.custo_por_hora }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="descricao">Descrição</label>
+        {{ form.descricao }}
+    </div>
+    <div class="form-group">
+        <label for="custo_total">Custo Total</label>
+        {{ form.custo_total }}
+    </div>
+    <div class="form-group">
+        <label for="tempo">Tempo</label>
+        {{ form.tempo }}
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+</form>
+</div>
 </body>
 </html>
