@@ -7,6 +7,8 @@ class Cliente(models.Model):
     endereco = models.CharField(max_length=255)
     telefone = models.CharField(max_length=20)
     email = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
+    role = models.CharField(max_length=50)
 
     class Meta:
         db_table = "cliente"

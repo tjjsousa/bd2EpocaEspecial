@@ -1,163 +1,239 @@
 <!DOCTYPE html>
 <html lang="pt">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Página Inicial</title>
     <!-- Adicionando Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
     <style>
-        .jumbotron {
-            background-color: #f8f9fa;
-            padding: 2rem 1rem;
-            margin-bottom: 2rem;
-        }
-        .card {
-            margin-bottom: 1.5rem;
-        }
-        .footer {
-            background-color: #f8f9fa;
-            padding: 1rem 0;
-            text-align: center;
-            margin-top: 2rem;
-        }
-        
+      .jumbotron {
+        background-color: #f8f9fa;
+        padding: 2rem 1rem;
+        margin-bottom: 2rem;
+      }
+      .card {
+        margin-bottom: 1.5rem;
+      }
+      .footer {
+        background-color: #f8f9fa;
+        padding: 1rem 0;
+        text-align: center;
+        margin-top: 2rem;
+      }
     </style>
-</head>
-<body>
-    
+  </head>
+  <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'clientes_view' %}">Clientes</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'veiculos_view' %}">Veículos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registo_entradas_view' %}">Registo de Entradas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'restauros_view' %}">Restauros</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'tarefas_restauro_view' %}">Tarefas de Restauro</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'faturacao_view' %}">Faturação</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registo_saidas_view' %}">Saídas de Veículos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'registo_tipos_mao_obra_view' %}">Tipos de Mão de Obra</a>
-                </li>
-            </ul>
-        </div>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'clientes_view' %}">Clientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'veiculos_view' %}">Veículos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'registo_entradas_view' %}"
+              >Registo de Entradas</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'restauros_view' %}">Restauros</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'tarefas_restauro_view' %}"
+              >Tarefas de Restauro</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'faturacao_view' %}">Faturação</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'registo_saidas_view' %}"
+              >Saídas de Veículos</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'registo_tipos_mao_obra_view' %}"
+              >Tipos de Mão de Obra</a
+            >
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" id="logout">Sair</a>
+          </li>
+        </ul>
+      </div>
     </nav>
 
     <div class="container">
-        <div class="jumbotron text-center">
-            <h1 class="display-4">Bem-vindo </h1>
-            <p class="lead"> Faz a gestão de todos os aspetos do negócio de restauro de veículos de forma eficiente e fácil.</p>
-            <hr class="my-4">
-            <p>Explora as funcionalidades abaixo para começar.</p>
-        </div>
+      <div class="jumbotron text-center">
+        <h1 class="display-4">Bem-vindo</h1>
+        <p class="lead">
+          Faz a gestão de todos os aspetos do negócio de restauro de veículos de
+          forma eficiente e fácil.
+        </p>
+        <hr class="my-4" />
+        <p>Explora as funcionalidades abaixo para começar.</p>
+      </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Clientes</h5>
-                        <p class="card-text"> Gestão de todos os clientes, adicionar novos e editar informações existentes.</p>
-                        <a href="{% url 'clientes_view' %}" class="btn btn-primary">Ver Clientes</a>
-                    </div>
-                </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Clientes</h5>
+              <p class="card-text">
+                Gestão de todos os clientes, adicionar novos e editar
+                informações existentes.
+              </p>
+              <a href="{% url 'clientes_view' %}" class="btn btn-primary"
+                >Ver Clientes</a
+              >
             </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Veículos</h5>
-                        <p class="card-text">gestão da quantidade de veículos, adicionar novos e editar informações existentes.</p>
-                        <a href="{% url 'veiculos_view' %}" class="btn btn-primary">Ver Veículos</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Registo de Entradas</h5>
-                        <p class="card-text">registar novas entradas de veículos e gestão de registos existentes.</p>
-                        <a href="{% url 'registo_entradas_view' %}" class="btn btn-primary">Ver Registos</a>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Veículos</h5>
+              <p class="card-text">
+                gestão da quantidade de veículos, adicionar novos e editar
+                informações existentes.
+              </p>
+              <a href="{% url 'veiculos_view' %}" class="btn btn-primary"
+                >Ver Veículos</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Registo de Entradas</h5>
+              <p class="card-text">
+                registar novas entradas de veículos e gestão de registos
+                existentes.
+              </p>
+              <a
+                href="{% url 'registo_entradas_view' %}"
+                class="btn btn-primary"
+                >Ver Registos</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Restauros</h5>
-                        <p class="card-text"> Gestão do restauro de veículos, adicionar novos e editar informações existentes.</p>
-                        <a href="{% url 'restauros_view' %}" class="btn btn-primary">Ver Restauros</a>
-                    </div>
-                </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Restauros</h5>
+              <p class="card-text">
+                Gestão do restauro de veículos, adicionar novos e editar
+                informações existentes.
+              </p>
+              <a href="{% url 'restauros_view' %}" class="btn btn-primary"
+                >Ver Restauros</a
+              >
             </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tarefas de Restauro</h5>
-                        <p class="card-text"> Gestão das tarefas de restauro, adicionar novas e editar informações existentes.</p>
-                        <a href="{% url 'tarefas_restauro_view' %}" class="btn btn-primary">Ver Tarefas</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Faturação</h5>
-                        <p class="card-text"> Gestão da faturação, adicionar novas faturas e editar informações existentes.</p>
-                        <a href="{% url 'faturacao_view' %}" class="btn btn-primary">Ver Faturação</a>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Tarefas de Restauro</h5>
+              <p class="card-text">
+                Gestão das tarefas de restauro, adicionar novas e editar
+                informações existentes.
+              </p>
+              <a
+                href="{% url 'tarefas_restauro_view' %}"
+                class="btn btn-primary"
+                >Ver Tarefas</a
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Faturação</h5>
+              <p class="card-text">
+                Gestão da faturação, adicionar novas faturas e editar
+                informações existentes.
+              </p>
+              <a href="{% url 'faturacao_view' %}" class="btn btn-primary"
+                >Ver Faturação</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Saídas de Veículos</h5>
-                        <p class="card-text">Gestão de saídas de veículos, adicionar novas e editar informações existentes.</p>
-                        <a href="{% url 'registo_saidas_view' %}" class="btn btn-primary">Ver Saídas</a>
-                    </div>
-                </div>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Saídas de Veículos</h5>
+              <p class="card-text">
+                Gestão de saídas de veículos, adicionar novas e editar
+                informações existentes.
+              </p>
+              <a href="{% url 'registo_saidas_view' %}" class="btn btn-primary"
+                >Ver Saídas</a
+              >
             </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Tipos de Mão de Obra</h5>
-                        <p class="card-text"> Gestão dos tipos de mão de obra, adicionar novos e editar informações existentes.</p>
-                        <a href="{% url 'registo_tipos_mao_obra_view' %}" class="btn btn-primary">Ver Tipos</a>
-                    </div>
-                </div>
-            </div>
+          </div>
         </div>
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Tipos de Mão de Obra</h5>
+              <p class="card-text">
+                Gestão dos tipos de mão de obra, adicionar novos e editar
+                informações existentes.
+              </p>
+              <a
+                href="{% url 'registo_tipos_mao_obra_view' %}"
+                class="btn btn-primary"
+                >Ver Tipos</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="footer">
-        <p>&copy; 2023 aplicação. Todos os direitos reservados.</p>
+      <p>&copy; 2023 aplicação. Todos os direitos reservados.</p>
     </div>
 
     <!-- Adicionando scripts do Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-</body>
+    {% load static %}
+    <script src="{% static 'js/session_check.js' %}"></script>
+    <script>
+      document.getElementById("logout").addEventListener("click", function () {
+        localStorage.removeItem("user");
+        window.location.href = "/login/";
+      });
+    </script>
+  </body>
 </html>

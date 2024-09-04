@@ -1,84 +1,88 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Inserir Faturação</title>
     <!-- Adicionando Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
     <style>
-        .table-hover tbody tr:hover {
-            cursor: pointer;
-            background-color: #f5f5f5;
-        }
+      .table-hover tbody tr:hover {
+        cursor: pointer;
+        background-color: #f5f5f5;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <h1 class="my-4">Inserir Faturação</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.non_field_errors }}
-            {{ form.restauro_id }}
-            <h2 class="my-4">Selecione um Restauro</h2>
-            <table class="table table-hover">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>ID</th>
-                        <th>Veículo</th>
-                        <th>Data de Início</th>
-                        <th>Data de Fim</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for restauro in restauros %}
-                    <tr data-id="{{ restauro.id }}">
-                        <td>{{ restauro.id }}</td>
-                        <td>{{ restauro.veiculo_id }}</td>
-                        <td>{{ restauro.data_inicio }}</td>
-                        <td>{{ restauro.data_fim }}</td>
-                        <td>{{ restauro.status }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="form-group">
-                <label for="data_emissao">Data de Emissão</label>
-                {{ form.data_emissao }}
-            </div>
-            <div class="form-group">
-                <label for="valor_total">Valor Total</label>
-                {{ form.valor_total }}
-            </div>
-            <div class="form-group">
-                <label for="itens">Itens</label>
-                {{ form.itens }}
-            </div>
-            <div class="form-group">
-                <label for="status_pagamento">Status de Pagamento</label>
-                {{ form.status_pagamento }}
-            </div>
-            <button type="submit" class="btn btn-success">Salvar</button>
-            <a href="{% url 'faturacao_view' %}" class="btn btn-secondary">Voltar para a lista de faturas</a>
-        </form>
+      <h1 class="my-4">Inserir Faturação</h1>
+      <form method="post">
+        {% csrf_token %} {{ form.non_field_errors }} {{ form.restauro_id }}
+        <h2 class="my-4">Selecione um Restauro</h2>
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>Veículo</th>
+              <th>Data de Início</th>
+              <th>Data de Fim</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for restauro in restauros %}
+            <tr data-id="{{ restauro.id }}">
+              <td>{{ restauro.id }}</td>
+              <td>{{ restauro.veiculo_id }}</td>
+              <td>{{ restauro.data_inicio }}</td>
+              <td>{{ restauro.data_fim }}</td>
+              <td>{{ restauro.status }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="form-group">
+          <label for="data_emissao">Data de Emissão</label>
+          {{ form.data_emissao }}
+        </div>
+        <div class="form-group">
+          <label for="valor_total">Valor Total</label>
+          {{ form.valor_total }}
+        </div>
+        <div class="form-group">
+          <label for="itens">Itens</label>
+          {{ form.itens }}
+        </div>
+        <div class="form-group">
+          <label for="status_pagamento">Status de Pagamento</label>
+          {{ form.status_pagamento }}
+        </div>
+        <button type="submit" class="btn btn-success">Salvar</button>
+        <a href="{% url 'faturacao_view' %}" class="btn btn-secondary"
+          >Voltar para a lista de faturas</a
+        >
+      </form>
     </div>
     <!-- Adicionando scripts do Bootstrap -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const rows = document.querySelectorAll('table.table-hover tbody tr');
-            rows.forEach(row => {
-                row.addEventListener('click', function () {
-                    const restauroId = this.getAttribute('data-id');
-                    document.querySelector('input[name="restauro_id"]').value = restauroId;
-                    rows.forEach(r => r.classList.remove('table-active'));
-                    this.classList.add('table-active');
-                });
-            });
+      document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("table.table-hover tbody tr");
+        rows.forEach((row) => {
+          row.addEventListener("click", function () {
+            const restauroId = this.getAttribute("data-id");
+            document.querySelector('input[name="restauro_id"]').value =
+              restauroId;
+            rows.forEach((r) => r.classList.remove("table-active"));
+            this.classList.add("table-active");
+          });
         });
+      });
     </script>
-</body>
-
+    {% load static %}
+    <script src="{% static 'js/session_check.js' %}"></script>
+  </body>
 </html>

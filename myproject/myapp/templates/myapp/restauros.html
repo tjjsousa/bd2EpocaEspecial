@@ -1,107 +1,146 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Lista de Restauros</title>
     <!-- Adicionando Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+  </head>
+  <body>
     <div class="container">
-        <div class="d-flex justify-content-between align-items-center my-4">
-            <h1>Lista de Restauros</h1>
-            <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
-            
-        </div>
-        {% if restauros %}
-        <table class="table table-striped">
-            <thead class="thead-dark">
-                <tr>
-                    <th>ID</th>
-                    <th>Veículo</th>
-                    <th>Data de Início</th>
-                    <th>Data de Fim</th>
-                    <th>Status</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for restauro in restauros %}
-                <tr>
-                    <td>{{ restauro.id }}</td>
-                    <td>{{ restauro.veiculo_id }}</td>
-                    <td>{{ restauro.data_inicio }}</td>
-                    <td>{{ restauro.data_fim }}</td>
-                    <td>{{ restauro.status }}</td>
-                    <td>
-                        <a href="{% url 'restauro_edit_view' restauro.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
-                        <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal" data-id="{{ restauro.id }}">Apagar</button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p>Nenhum restauro encontrado.</p>
-        {% endif %}
-        <a href="{% url 'restauro_insert_view' %}" class="btn btn-success">Adicionar Restauro</a>
+      <div class="d-flex justify-content-between align-items-center my-4">
+        <h1>Lista de Restauros</h1>
+        <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
+      </div>
+      {% if restauros %}
+      <table class="table table-striped">
+        <thead class="thead-dark">
+          <tr>
+            <th>ID</th>
+            <th>Veículo</th>
+            <th>Data de Início</th>
+            <th>Data de Fim</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for restauro in restauros %}
+          <tr>
+            <td>{{ restauro.id }}</td>
+            <td>{{ restauro.veiculo_id }}</td>
+            <td>{{ restauro.data_inicio }}</td>
+            <td>{{ restauro.data_fim }}</td>
+            <td>{{ restauro.status }}</td>
+            <td>
+              <a
+                href="{% url 'restauro_edit_view' restauro.id %}"
+                class="btn btn-warning btn-sm mr-2"
+                >Editar</a
+              >
+              <button
+                class="btn btn-danger btn-sm"
+                data-toggle="modal"
+                data-target="#deleteModal"
+                data-id="{{ restauro.id }}"
+              >
+                Apagar
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p>Nenhum restauro encontrado.</p>
+      {% endif %}
+      <a href="{% url 'restauro_insert_view' %}" class="btn btn-success"
+        >Adicionar Restauro</a
+      >
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Confirmar Exclusão</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Tem certeza de que deseja excluir o restauro com ID <span id="modal-restauro-id"></span>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirm-delete">Excluir</button>
-                </div>
-            </div>
+    <div
+      class="modal fade"
+      id="deleteModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="deleteModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModalLabel">
+              Confirmar Exclusão
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            Tem certeza de que deseja excluir o restauro com ID
+            <span id="modal-restauro-id"></span>?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button type="button" class="btn btn-danger" id="confirm-delete">
+              Excluir
+            </button>
+          </div>
         </div>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script>
-        $('#deleteModal').on('show.bs.modal', function (event) {
-            var button = $(event.relatedTarget);
-            var restauroId = button.data('id');
-            console.log('Registro ID:', restauroId);
-            var modal = $(this);
-            modal.find('#modal-restauro-id').text(restauroId);
-            modal.find('#confirm-delete').data('id', restauroId);
-        });
+      $("#deleteModal").on("show.bs.modal", function (event) {
+        var button = $(event.relatedTarget);
+        var restauroId = button.data("id");
+        console.log("Registro ID:", restauroId);
+        var modal = $(this);
+        modal.find("#modal-restauro-id").text(restauroId);
+        modal.find("#confirm-delete").data("id", restauroId);
+      });
 
-        $('#confirm-delete').on('click', function () {
-            var restauroId = $(this).data('id');
-            $.ajax({
-                url: '/myapp/restauros_delete/' + restauroId + '/',
-                type: 'POST',
-                data: {
-                    'csrfmiddlewaretoken': '{{ csrf_token }}'
-                },
-                success: function (response) {
-                    if (response.success) {
-                        window.location.reload();
-                    } else {
-                        
-                        alert('Erro ao excluir o restauro.');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.log('Delete error:', error); // Log para verificar o erro
-                    alert('Erro ao excluir o registro.');
-                }
-            });
+      $("#confirm-delete").on("click", function () {
+        var restauroId = $(this).data("id");
+        $.ajax({
+          url: "/myapp/restauros_delete/" + restauroId + "/",
+          type: "POST",
+          data: {
+            csrfmiddlewaretoken: "{{ csrf_token }}",
+          },
+          success: function (response) {
+            if (response.success) {
+              window.location.reload();
+            } else {
+              alert("Erro ao excluir o restauro.");
+            }
+          },
+          error: function (xhr, status, error) {
+            console.log("Delete error:", error); // Log para verificar o erro
+            alert("Erro ao excluir o registro.");
+          },
         });
+      });
     </script>
-</body>
+    {% load static %}
+    <script src="{% static 'js/session_check.js' %}"></script>
+  </body>
 </html>

@@ -1,85 +1,100 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>{% if not id %}Inserir{% else %}Editar{% endif %} Veículo</title>
+    <!-- Adicionando Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    />
+    <style>
+      .table-hover tbody tr:hover {
+        cursor: pointer;
+        background-color: #f5f5f5;
+      }
+      .selected {
+        background-color: #d1ecf1 !important;
+      }
+    </style>
+    <script>
+      function selecionarCliente(clienteId, row) {
+        document.getElementById("id_cliente").value = clienteId;
+        var rows = document.querySelectorAll(".table-hover tbody tr");
+        rows.forEach(function (r) {
+          r.classList.remove("selected");
+        });
+        row.classList.add("selected");
+      }
+    </script>
+  </head>
 
-<head>
-  <title>{% if not id %}Inserir{% else %}Editar{% endif %} Veículo</title>
-  <!-- Adicionando Bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <style>
-    .table-hover tbody tr:hover {
-      cursor: pointer;
-      background-color: #f5f5f5;
-    }
-    .selected {
-      background-color: #d1ecf1 !important;
-    }
-  </style>
-  <script>
-    function selecionarCliente(clienteId, row) {
-      document.getElementById('id_cliente').value = clienteId;
-      var rows = document.querySelectorAll('.table-hover tbody tr');
-      rows.forEach(function(r) {
-        r.classList.remove('selected');
-      });
-      row.classList.add('selected');
-    }
-  </script>
-</head>
-
-<body>
-  <div class="container">
-    <h1 class="my-4">{% if not id %}Inserir{% else %}Editar{% endif %} Veículo</h1>
-    <form method="post" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{ form.non_field_errors }}
-      <div class="form-group">
-        <label for="id_marca">Marca</label>
-        {{ form.marca }}
-      </div>
-      <div class="form-group">
-        <label for="id_modelo">Modelo</label>
-        {{ form.modelo }}
-      </div>
-      <div class="form-group">
-        <label for="id_matricula">Matrícula</label>
-        {{ form.matricula }}
-      </div>
-      <div class="form-group">
-        <label for="id_cor">Cor</label>
-        {{ form.cor }}
-      </div>
-      <div class="form-group">
-        <label for="id_ano">Ano</label>
-        {{ form.ano }}
-      </div>
-      <input type="hidden" id="id_cliente" name="cliente" value="{{ form.cliente.value }}">
-      <h2 class="my-4">Selecione um Cliente</h2>
-      <table class="table table-hover">
-        <thead class="thead-dark">
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Telefone</th>
-            <th>Endereço</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for cliente in clientes %}
-          <tr onclick="selecionarCliente('{{ cliente.id }}', this)">
-            <td>{{ cliente.id }}</td>
-            <td>{{ cliente.nome }}</td>
-            <td>{{ cliente.email }}</td>
-            <td>{{ cliente.telefone }}</td>
-            <td>{{ cliente.endereco }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <input type="submit" class="btn btn-primary my-4" value="{% if not id %}Inserir{% else %}Editar{% endif %}">
-      <a href="{% url 'veiculos_view' %}" class="btn btn-secondary">Voltar para a lista de veiculos</a>
-    </form>
-  </div>
-</body>
-
+  <body>
+    <div class="container">
+      <h1 class="my-4">
+        {% if not id %}Inserir{% else %}Editar{% endif %} Veículo
+      </h1>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %} {{ form.non_field_errors }}
+        <div class="form-group">
+          <label for="id_marca">Marca</label>
+          {{ form.marca }}
+        </div>
+        <div class="form-group">
+          <label for="id_modelo">Modelo</label>
+          {{ form.modelo }}
+        </div>
+        <div class="form-group">
+          <label for="id_matricula">Matrícula</label>
+          {{ form.matricula }}
+        </div>
+        <div class="form-group">
+          <label for="id_cor">Cor</label>
+          {{ form.cor }}
+        </div>
+        <div class="form-group">
+          <label for="id_ano">Ano</label>
+          {{ form.ano }}
+        </div>
+        <input
+          type="hidden"
+          id="id_cliente"
+          name="cliente"
+          value="{{ form.cliente.value }}"
+        />
+        <h2 class="my-4">Selecione um Cliente</h2>
+        <table class="table table-hover">
+          <thead class="thead-dark">
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Email</th>
+              <th>Telefone</th>
+              <th>Endereço</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cliente in clientes %}
+            <tr onclick="selecionarCliente('{{ cliente.id }}', this)">
+              <td>{{ cliente.id }}</td>
+              <td>{{ cliente.nome }}</td>
+              <td>{{ cliente.email }}</td>
+              <td>{{ cliente.telefone }}</td>
+              <td>{{ cliente.endereco }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <input
+          type="submit"
+          class="btn btn-primary my-4"
+          value="{% if not id %}Inserir{% else %}Editar{% endif %}"
+        />
+        <a href="{% url 'veiculos_view' %}" class="btn btn-secondary"
+          >Voltar para a lista de veiculos</a
+        >
+      </form>
+    </div>
+    {% load static %}
+    <script src="{% static 'js/session_check.js' %}"></script>
+  </body>
 </html>
