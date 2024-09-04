@@ -37,9 +37,10 @@ def clientes_insert_view(request, id = None):
         if form.is_valid():
             if id:
                 editar_cliente(cliente_id=id, nome=form.cleaned_data['nome'], endereco=form.cleaned_data['endereco'], telefone=form.cleaned_data['telefone'], email=form.cleaned_data['email'])
+                return redirect('clientes_view')
             else:
                 inserir_cliente(nome=form.cleaned_data['nome'], endereco=form.cleaned_data['endereco'], telefone=form.cleaned_data['telefone'], email=form.cleaned_data['email'])
-            return render(request, 'myapp/inserir_clientes.html', {'data': data, 'form': form, 'id': id})
+                return redirect('clientes_view')
         else:
             return render(request, 'myapp/inserir_clientes.html', {'data': data, 'form': form, 'id': id})
 
@@ -65,8 +66,14 @@ def veiculos_view(request):
 
     return render(request, 'myapp/veiculos.html', {'data': veiculos})
 
-def veiculos_insert_view(request, id = None):
-    data = Veiculo.objects.using('mongo').all()
+from django.shortcuts import render, redirect, get_object_or_404
+from .forms import VeiculoForm
+from .models import Veiculo, Cliente
+
+def veiculos_insert_view(request, id=None):
+    veiculos = Veiculo.objects.using('mongo').all()
+    clientes = Cliente.objects.using('mongo').all()
+
     if request.method == "GET":
         if id:
             veiculo = get_veiculo_id(id)
@@ -77,23 +84,36 @@ def veiculos_insert_view(request, id = None):
                 'matricula': veiculo['matricula'],
                 'cor': veiculo['cor'],
                 'ano': veiculo['ano']
-            }
-                )
+            })
         else:
-            form = VeiculoForm(request.POST or None)
-        return render(request, 'myapp/inserir_veiculos.html', {'data': data, 'form': form, 'id': id})
+            form = VeiculoForm()
+        return render(request, 'myapp/inserir_veiculos.html', {'veiculos': veiculos, 'form': form, 'id': id, 'clientes': clientes})
+
     if request.method == "POST":
         form = VeiculoForm(request.POST)
         if form.is_valid():
-            form.cleaned_data
             if id:
-                editar_veiculo(veiculo_id=id, cliente= form.data['cliente'], marca=form.data['marca'], modelo=form.data['modelo'], matricula=form.data['matricula'], cor=form.data['cor'], ano=form.data['ano'])
+                editar_veiculo(
+                    veiculo_id=id,
+                    cliente=form.cleaned_data['cliente'],
+                    marca=form.cleaned_data['marca'],
+                    modelo=form.cleaned_data['modelo'],
+                    matricula=form.cleaned_data['matricula'],
+                    cor=form.cleaned_data['cor'],
+                    ano=form.cleaned_data['ano']
+                )
             else:
-                inserir_veiculo(cliente= form.data['cliente'], marca=form.data['marca'], modelo=form.data['modelo'], matricula=form.data['matricula'], cor=form.data['cor'], ano=form.data['ano'])
-            return render(request, 'myapp/inserir_veiculos.html', {'data': data, 'form': form, 'id': id})
+                inserir_veiculo(
+                    cliente=form.cleaned_data['cliente'],
+                    marca=form.cleaned_data['marca'],
+                    modelo=form.cleaned_data['modelo'],
+                    matricula=form.cleaned_data['matricula'],
+                    cor=form.cleaned_data['cor'],
+                    ano=form.cleaned_data['ano']
+                )
+            return redirect('veiculos_view')  # Redireciona para a página de lista de veículos após sucesso
         else:
-            return render(request, 'myapp/inserir_veiculos.html', {'data': data, 'form': form,  'id': id})
-
+            return render(request, 'myapp/inserir_veiculos.html', {'veiculos': veiculos, 'form': form, 'id': id, 'clientes': clientes})
 def veiculos_delete_view(request, id):
     apagar_veiculo(id)
     data = Veiculo.objects.using('mongo').all()

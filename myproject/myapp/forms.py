@@ -1,20 +1,30 @@
 from django import forms
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
 
-class ClienteForm(forms.Form):
-    nome = forms.CharField(max_length=100)
-    endereco = forms.CharField(max_length=100)
-    telefone = forms.CharField(max_length=100)
-    email = forms.CharField(max_length=100)
 
-class VeiculoForm(forms.Form):
-    cliente = forms.ModelChoiceField(queryset=Cliente.objects.using('mongo').all(), empty_label="Selecione um cliente", to_field_name="id")
-    marca = forms.CharField(max_length=100)
-    modelo = forms.CharField(max_length=100)
-    matricula = forms.CharField(max_length=100)
-    cor = forms.CharField(max_length=100)
-    ano = forms.IntegerField()
-
+class ClienteForm(forms.ModelForm):
+    class Meta:
+        model = Cliente
+        fields = ['nome', 'email', 'telefone' , 'endereco']
+        widgets = {
+            'nome': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+            'endereco': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+class VeiculoForm(forms.ModelForm):
+    class Meta:
+        model = Veiculo
+        fields = ['marca', 'modelo', 'matricula', 'cor', 'ano', 'cliente']  # Adicione 'cliente' se necessário
+        widgets = {
+            'marca': forms.TextInput(attrs={'class': 'form-control'}),
+            'modelo': forms.TextInput(attrs={'class': 'form-control'}),
+            'matricula': forms.TextInput(attrs={'class': 'form-control'}),
+            'cor': forms.TextInput(attrs={'class': 'form-control'}),
+            'ano': forms.NumberInput(attrs={'class': 'form-control'}),
+            'cliente': forms.Select(attrs={'class': 'form-control'}),  # Use Select para campos de chave estrangeira
+        
+        }
 class RegistoEntradaForm(forms.Form):
     veiculo_id = forms.CharField(widget=forms.HiddenInput())
     data_entrada = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
