@@ -293,19 +293,17 @@ def tarefas_restauro_insert_view(request):
         return custom_404(request, None)
     
     if request.method == "POST":
-        form = TarefaRestauroForm(request.POST)
-        if form.is_valid():
-            restauro_id = form.cleaned_data.get('restauro_id')
-            descricao = form.cleaned_data.get('descricao')
-            mao_obra_id = form.cleaned_data.get('mao_obra')
-            custo_total = form.cleaned_data.get('custo_total')
-            tempo = form.cleaned_data.get('tempo')
+        restauro_id = request.POST.get('restauro_id')
+        descricao = request.POST.get('descricao')
+        mao_obra_id = request.POST.get('mao_obra')
+        custo_total = request.POST.get('custo_total')
+        tempo = request.POST.get('tempo')
 
-            if restauro_id and mao_obra_id:
-                inserir_tarefas_restauro(restauro_id, descricao, mao_obra_id, custo_total, tempo)
-                return redirect('tarefas_restauro_view')
-            else:
-                form.add_error(None, 'Restauro e Mão de Obra são obrigatórios.')
+        if restauro_id and mao_obra_id:
+            inserir_tarefas_restauro(restauro_id, descricao, mao_obra_id, custo_total, tempo)
+            return redirect('tarefas_restauro_view')
+        else:
+            form.add_error(None, 'Restauro e Mão de Obra são obrigatórios.')
     else:
         form = TarefaRestauroForm()
 
@@ -321,20 +319,19 @@ def tarefas_restauro_edit_view(request, id):
     
     tarefa_restauro = get_tarefa_restauro_id(id)
     if request.method == "POST":
-        form = TarefaRestauroForm(request.POST)
-        if form.is_valid():
-            restauro_id = form.cleaned_data.get('restauro_id')
-            descricao = form.cleaned_data.get('descricao')
-            mao_obra = form.cleaned_data.get('mao_obra')
-            custo_total = form.cleaned_data.get('custo_total')
-            tempo = form.cleaned_data.get('tempo')
-                        
-            if restauro_id is None:
-                form.add_error('restauro_id', 'O campo Restauro ID é obrigatório.')
-            else:
-                # Atualizar o registro de entrada
-                editar_tarefa_restauro(id, restauro_id, descricao, mao_obra, custo_total,tempo)
-                return redirect('tarefas_restauro_view')
+
+        restauro_id = request.POST.get('restauro_id')
+        descricao = request.POST.get('descricao')
+        mao_obra = request.POST.get('mao_obra')
+        custo_total = request.POST.get('custo_total')
+        tempo = request.POST.get('tempo')
+                    
+        if restauro_id is None:
+            form.add_error('restauro_id', 'O campo Restauro ID é obrigatório.')
+        else:
+            # Atualizar o registro de entrada
+            editar_tarefa_restauro(id, restauro_id, descricao, mao_obra, custo_total,tempo)
+            return redirect('tarefas_restauro_view')
     else:
         form = TarefaRestauroForm(initial={
             'restauro_id': tarefa_restauro['restauro_id'],

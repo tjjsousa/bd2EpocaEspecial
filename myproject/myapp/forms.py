@@ -39,9 +39,9 @@ class RestauroForm(forms.Form):
 class TarefaRestauroForm(forms.Form):
     restauro = forms.CharField(widget=forms.HiddenInput())
     descricao = forms.CharField(max_length=255)
-    mao_obra = forms.CharField(max_length=255)
-    custo_total = forms.CharField(max_length=255)
-    tempo = forms.CharField(max_length=255)
+    mao_obra = forms.IntegerField()
+    custo_total = forms.FloatField()
+    tempo = forms.FloatField()
 
 
 class FaturacaoForm(forms.Form):

@@ -17,7 +17,7 @@
   <body>
     <div class="container">
       <h1 class="my-4">Inserir Tarefa de Restauro</h1>
-      <form method="post">
+      <form method="post" enctype="multipart/form-data">
         {% csrf_token %} {{ form.non_field_errors }}
         <div class="form-group">
           <label for="restauro_id">Selecione um Restauro</label>

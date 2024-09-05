@@ -207,7 +207,7 @@ def inserir_tarefas_restauro(restauro_id, descricao, mao_obra, custo_total, temp
 def get_all_tarefas_restauro():
     try:
         with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM tarefas_restauro")
+            cursor.execute("SELECT * FROM tarefas_restauro_view")
             result = cursor.fetchall()
             if result:
                 
