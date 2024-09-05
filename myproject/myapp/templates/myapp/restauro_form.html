@@ -57,8 +57,15 @@
         </div>
         <div class="form-group">
           <label for="status">Status</label>
-          {{ form.status }}
-        </div>
+          <div>
+              <input type="radio" id="em_processamento" name="status" value="Em processamento">
+              <label for="em_processamento">Em processamento</label>
+          </div>
+          <div>
+              <input type="radio" id="concluido" name="status" value="Concluído">
+              <label for="concluido">Concluído</label>
+          </div>
+      </div>
         <button type="submit" class="btn btn-success">Inserir</button>
         <a href="{% url 'restauros_view' %}" class="btn btn-secondary">Voltar a lista de restauros</a>
       </form>
