@@ -2,21 +2,27 @@ from django.shortcuts import render , redirect
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
 from .database import get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
-from django.http import JsonResponse
+from django.http import JsonResponse , HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
 #VIEWS DO PROJETO
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
 
 def index_view(request):
     return render(request, 'myapp/index.html')
 
 #CLIENTES
 def clientes_view(request):
+    
     data = Cliente.objects.using('mongo').all()
     return render(request, 'myapp/clientes.html', {'data': data})
 
 def clientes_insert_view(request, id = None):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
     
     data = Cliente.objects.using('mongo').all()
     if request.method == "GET":
@@ -45,6 +51,10 @@ def clientes_insert_view(request, id = None):
             return render(request, 'myapp/inserir_clientes.html', {'data': data, 'form': form, 'id': id})
 
 def clientes_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     apagar_cliente(id)
     data = Cliente.objects.using('mongo').all()
     return render(request, 'myapp/clientes.html', {'data': data})
@@ -66,11 +76,11 @@ def veiculos_view(request):
 
     return render(request, 'myapp/veiculos.html', {'data': veiculos})
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .forms import VeiculoForm
-from .models import Veiculo, Cliente
-
 def veiculos_insert_view(request, id=None):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     veiculos = Veiculo.objects.using('mongo').all()
     clientes = Cliente.objects.using('mongo').all()
 
@@ -114,7 +124,12 @@ def veiculos_insert_view(request, id=None):
             return redirect('veiculos_view')  # Redireciona para a página de lista de veículos após sucesso
         else:
             return render(request, 'myapp/inserir_veiculos.html', {'veiculos': veiculos, 'form': form, 'id': id, 'clientes': clientes})
+
 def veiculos_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     apagar_veiculo(id)
     data = Veiculo.objects.using('mongo').all()
     return render(request, 'myapp/veiculos.html', {'data': data})
@@ -122,6 +137,10 @@ def veiculos_delete_view(request, id):
 
 #REGISTO DE ENTRADAS
 def registo_entrada_insert_view(request):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         form = RegistoEntradaForm(request.POST)
         if form.is_valid():
@@ -148,6 +167,10 @@ def registo_entradas_view(request):
     return render(request, 'myapp/registo_entradas.html', {'data': data})
 
 def registo_entrada_edit_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     registro = get_registo_entrada_id(id)
     if request.method == "POST":
         form = RegistoEntradaForm(request.POST)
@@ -175,6 +198,10 @@ def registo_entrada_edit_view(request, id):
     return render(request, 'myapp/registo_entrada_form.html', {'form': form, 'veiculos': veiculos})
 
 def registo_entrada_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         #registo = get_object_or_404(RegistoEntrada, id=id)
         remove_registo_entrada(id)
@@ -184,6 +211,10 @@ def registo_entrada_delete_view(request, id):
 
 #RESTAUROS
 def restauro_insert_view(request):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         form = RestauroForm(request.POST)
         if form.is_valid():
@@ -207,6 +238,10 @@ def restauro_insert_view(request):
     return render(request, 'myapp/restauro_form.html', {'form': form, 'veiculos': veiculos})
 
 def restauro_edit_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     restauros = get_restauro_id(id)
     if request.method == "POST":
         form = RestauroForm(request.POST)
@@ -236,6 +271,10 @@ def restauro_edit_view(request, id):
     return render(request, 'myapp/restauro_form.html', {'form': form, 'veiculos': veiculos})
 
 def restauro_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         #restauro = get_object_or_404(Restauro, id=id)
         remove_restauro(id)
@@ -249,6 +288,10 @@ def restauros_view(request):
 
 #TAREFAS DE RESTAURO    
 def tarefas_restauro_insert_view(request):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         form = TarefaRestauroForm(request.POST)
         if form.is_valid():
@@ -272,6 +315,10 @@ def tarefas_restauro_insert_view(request):
     return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros, 'tipos_mao_obra': tipos_mao_obra})
 
 def tarefas_restauro_edit_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     tarefa_restauro = get_tarefa_restauro_id(id)
     if request.method == "POST":
         form = TarefaRestauroForm(request.POST)
@@ -309,6 +356,10 @@ def tarefas_restauro_view(request):
     return render(request, 'myapp/tarefas_restauro.html', {'data': data})
 
 def tarefas_restauro_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         #restauro = get_object_or_404(Restauro, id=id)
         remove_tarefa_restauro(id)
@@ -322,6 +373,10 @@ def faturacao_view(request):
     return render(request, 'myapp/faturacao.html', {'data': data}) 
 
 def faturacao_insert_view(request):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         form = FaturacaoForm(request.POST)
         if form.is_valid():
@@ -344,6 +399,10 @@ def faturacao_insert_view(request):
     return render(request, 'myapp/faturacao_form.html', {'form': form, 'veiculos': veiculos})
 
 def faturacao_edit_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     registro = get_faturacao_id(id)
     if request.method == "POST":
         form = FaturacaoForm(request.POST)
@@ -366,6 +425,10 @@ def faturacao_edit_view(request, id):
         })
 
 def faturacao_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         #registro = get_object_or_404(Faturacao, id=id)
         remove_faturacao(id)
@@ -385,6 +448,10 @@ def faturacao_delete_view(request, id):
 #TIPOS MAO OBRA
 
 def registo_tipos_mao_obra_insert_view(request):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         form = TipoMaoObraForm(request.POST)
         if form.is_valid():
@@ -405,6 +472,10 @@ def registo_tipos_mao_obra_view(request):
     return render(request, 'myapp/tipos_mao_obra.html', {'data': data})
 
 def registo_tipos_mao_obra_edit_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     registro = get_tipo_mao_obra_id(id)
     if request.method == "POST":
         form = TipoMaoObraForm(request.POST)
@@ -425,6 +496,10 @@ def registo_tipos_mao_obra_edit_view(request, id):
     return render(request, 'myapp/tipos_mao_obra_form.html', {'form': form})
 
 def registo_tipos_mao_obra_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         #registro = get_object_or_404(TipoMaoObra, id=id)
         remove_tipos_mao_obra(id)
@@ -435,6 +510,10 @@ def registo_tipos_mao_obra_delete_view(request, id):
 
 #SAIDA DE VEICULOS
 def registo_saidas_insert_view(request):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         form = RegistoSaidasForm(request.POST)
         if form.is_valid():
@@ -462,6 +541,10 @@ def registo_saidas_view(request):
     return render(request, 'myapp/saidas_veiculos.html', {'data': data})
 
 def registo_saidas_edit_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     registro = get_registo_saidas_id(id)
     if request.method == "POST":
         form = RegistoSaidasForm(request.POST)
@@ -491,6 +574,10 @@ def registo_saidas_edit_view(request, id):
     return render(request, 'myapp/registo_saidas_form.html', {'form': form, 'veiculos': veiculos})
 
 def registo_saidas_delete_view(request, id):
+    
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
     if request.method == "POST":
         #registro = get_object_or_404(SaidaVeiculo, id=id
         print(id)

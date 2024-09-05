@@ -10,7 +10,8 @@ def register_user(name, email, password):
         '_id': generate_uuid_srt(),
         'name': name,
         'email': email,
-        'password': password
+        'password': password,
+        'isAdmin': False
     }
 
     return Cliente.insert_one(user)

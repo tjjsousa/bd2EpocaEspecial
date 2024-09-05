@@ -18,7 +18,8 @@ def index_view(request):
                 user_data = {
                     'name': user.get('name'),
                     'email': user.get('email'),
-                    'role': user.get('role') or 'user'
+                    #'role': user.get('role') or 'user'
+                    'isAdmin': user.get('isAdmin')
                 }
                 request.session['user'] = user_data
                 messages.success(request, 'Login efetuado com sucesso')

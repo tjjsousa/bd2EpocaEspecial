@@ -151,7 +151,8 @@
           localStorage.setItem('user', JSON.stringify({
             name: "{{ user.name }}",
             email: "{{ user.email }}",
-            role: "{{ user.role }}"
+            isAdmin: "{{ user.isAdmin }}",
+            //role: "{{ user.role }}"
           }));
           window.location.href = "/myapp/";
         {% endif %}

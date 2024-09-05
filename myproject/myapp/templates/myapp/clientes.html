@@ -1,74 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Clientes</title>
-    <!-- Adicionando Bootstrap -->
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    />
-  </head>
-  <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-    </nav>
-    <div class="container">
-      <div class="d-flex justify-content-between align-items-center my-4">
-        <h1>Clientes</h1>
-        <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
-      </div>
-      <table class="table table-striped">
-        <thead class="thead-dark">
-          <tr>
-            <th>Nome</th>
-            <th>Endereço</th>
-            <th>Telefone</th>
-            <th>Email</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for cliente in data %}
-          <tr>
-            <td>{{ cliente.nome }}</td>
-            <td>{{ cliente.endereco }}</td>
-            <td>{{ cliente.telefone }}</td>
-            <td>{{ cliente.email }}</td>
-            <td>
-              <a
-                href="{% url 'clientes_edit_view' cliente.id %}"
-                class="btn btn-warning btn-sm mr-2"
-                >Editar</a
-              >
-              <a
-                href="{% url 'clientes_delete_view' cliente.id %}"
-                class="btn btn-danger btn-sm"
-                >Apagar</a
-              >
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <a href="{% url 'clientes_insert_view' %}" class="btn btn-success mt-3"
-        >Adicionar Cliente</a
-      >
+
+<head>
+  <title>Clientes</title>
+  <!-- Adicionando Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  </nav>
+  <div class="container">
+    <div class="d-flex justify-content-between align-items-center my-4">
+      <h1>Clientes</h1>
+      <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
     </div>
-    <!-- Adicione o JS do Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    {% load static %}
-    <script src="{% static 'js/session_check.js' %}"></script>
-  </body>
+    <table class="table table-striped">
+      <thead class="thead-dark">
+        <tr>
+          <th>Nome</th>
+          <th>Endereço</th>
+          <th>Telefone</th>
+          <th>Email</th>
+          {% if request.session.user.isAdmin %}
+          <th>Ações</th>
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for cliente in data %}
+        <tr>
+          <td>{{ cliente.nome }}</td>
+          <td>{{ cliente.endereco }}</td>
+          <td>{{ cliente.telefone }}</td>
+          <td>{{ cliente.email }}</td>
+          {% if request.session.user.isAdmin %}
+          <td>           
+            <a href="{% url 'clientes_edit_view' cliente.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
+            <a href="{% url 'clientes_delete_view' cliente.id %}" class="btn btn-danger btn-sm">Apagar</a>           
+          </td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if request.session.user.isAdmin %}
+    <a href="{% url 'clientes_insert_view' %}" class="btn btn-success mt-3">Adicionar Cliente</a>
+    {% else %}
+    <p></p>
+    {% endif %}
+    
+  </div>
+  <!-- Adicione o JS do Bootstrap -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  {% load static %}
+  <script src="{% static 'js/session_check.js' %}"></script>
+</body>
+
 </html>
