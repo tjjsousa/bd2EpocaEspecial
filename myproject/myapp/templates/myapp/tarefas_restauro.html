@@ -38,15 +38,12 @@
             <td>{{ tarefas_restauro.tempo }}</td>
             <td>
               <a
-                href="{% url 'tarefas_restauro_edit_view' tarefas_restauro.id %}"
-                class="btn btn-warning btn-sm mr-2"
-                >Editar</a
-              >
+                href="{% url 'tarefas_restauro_edit_view' tarefas_restauro.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
               <button
                 class="btn btn-danger btn-sm"
                 data-toggle="modal"
                 data-target="#deleteModal"
-                data-id="{{ restauro.id }}"
+                data-id="{{ tarefas_restauro.id }}"
               >
                 Apagar
               </button>
@@ -58,9 +55,7 @@
       {% else %}
       <p>Nenhum restauro encontrado.</p>
       {% endif %}
-      <a href="{% url 'tarefas_restauro_insert_view' %}" class="btn btn-success"
-        >Adicionar Tarefas de Restauro</a
-      >
+      <a href="{% url 'tarefas_restauro_insert_view' %}" class="btn btn-success">Adicionar Tarefas de Restauro</a>
     </div>
 
     <!-- Modal -->
