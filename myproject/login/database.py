@@ -3,13 +3,15 @@ from myapp.utils import generate_uuid_srt
 db = MongoConnection().get_db()
 Cliente = MongoConnection().get_collection('cliente')
 
-def register_user(name, email, password):
+def register_user(nome, email, password):
     # with all validations and checks
     # insert the user in the database
     user = {
         '_id': generate_uuid_srt(),
-        'name': name,
+        'nome': nome,
         'email': email,
+        'endereco': '',
+        'telefone': '',
         'password': password,
         'isAdmin': False
     }

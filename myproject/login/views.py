@@ -16,7 +16,7 @@ def index_view(request):
             if user:
                 # Armazenar informações do usuário na sessão
                 user_data = {
-                    'name': user.get('name'),
+                    'nome': user.get('nome'),
                     'email': user.get('email'),
                     #'role': user.get('role') or 'user'
                     'isAdmin': user.get('isAdmin')
@@ -27,7 +27,7 @@ def index_view(request):
                 messages.error(request, 'Erro ao efetuar login')
         
         elif form_type == 'register':
-            name = request.POST.get('name')
+            nome = request.POST.get('nome')
             email = request.POST.get('email')
             password = request.POST.get('password')
             confirm_password = request.POST.get('confirm_password')
@@ -36,7 +36,7 @@ def index_view(request):
                 messages.error(request, 'Passwords não coincidem')
             else:
                 try:
-                    register_user(name, email, password)
+                    register_user(nome, email, password)
                     messages.success(request, 'Registo efetuado com sucesso')
                 except Exception as e:
                     messages.error(request, f'Erro ao efetuar registo: {e}')

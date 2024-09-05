@@ -83,12 +83,12 @@
           <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
-              <label for="name">Nome</label>
+              <label for="nome">Nome</label>
               <input
                 type="text"
                 class="form-control"
-                id="name"
-                name="name"
+                id="nome"
+                name="nome"
                 required
               />
             </div>
@@ -149,7 +149,7 @@
         {% if user %}
           // Armazena os dados no localStorage
           localStorage.setItem('user', JSON.stringify({
-            name: "{{ user.name }}",
+            nome: "{{ user.nome }}",
             email: "{{ user.email }}",
             isAdmin: "{{ user.isAdmin }}",
             //role: "{{ user.role }}"
