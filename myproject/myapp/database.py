@@ -497,3 +497,27 @@ def get_all_tipos_mao_obra():
     finally:
         connection.close()
 
+
+def export_xml():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT obter_tarefas_restauro_xml()")
+            result = cursor.fetchall()
+            if result:
+                return result
+
+            return None
+    finally:
+        connection.close()
+
+def export_json():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT obter_tarefas_restauro_json()")
+            result = cursor.fetchall()
+            if result:
+                return result
+
+            return None
+    finally:
+        connection.close()    

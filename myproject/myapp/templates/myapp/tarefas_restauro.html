@@ -18,6 +18,14 @@
         <a href="{% url 'exportar_tarefas_json' %}" class="btn btn-primary">Exportar JSON</a>
         <a href="{% url 'exportar_tarefas_xml' %}" class="btn btn-primary">Exportar XML</a>
       </div>
+      <form method="post" enctype="multipart/form-data" action="{% url 'import_tarefas_restauro_xml_json' %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="file">Importar Tarefas de Restauro (JSON ou XML):</label>
+          <input type="file" class="form-control-file" id="file" name="file" accept=".json,.xml">
+        </div>
+        <button type="submit" class="btn btn-primary">Importar</button>
+      </form>
     </div>
     <p></p>
     {% if data %}

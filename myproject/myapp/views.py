@@ -2,10 +2,18 @@ from django.shortcuts import render , redirect
 from datetime import date
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-from .database import apagar_cliente,alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente_email, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
+from .database import apagar_cliente,alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente_email, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id, export_xml, export_json
 from django.http import JsonResponse , HttpResponseNotFound , HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
+import json
+import xml.etree.ElementTree as ET
+from decimal import Decimal
+from django.contrib import messages
+from django.conf import settings
+from django.db import connection
+
+
 
 #VIEWS DO PROJETO
 def custom_404(request, exception):
@@ -637,30 +645,77 @@ def registo_saidas_delete_view(request, id):
 #SAIDA DE VEICULOS
 
 
-import json
-import xml.etree.ElementTree as ET
-from decimal import Decimal
-
 def decimal_default(obj):
     if isinstance(obj, Decimal):
         return str(obj)
     raise TypeError
 
 def exportar_tarefas_json(request):
-    tarefas = get_all_tarefas_restauro()
-    response = HttpResponse(json.dumps(tarefas, default=decimal_default), content_type='application/json')
-    response['Content-Disposition'] = 'attachment; filename=tarefas_restauro.json'
-    return response
+    request = json.dumps(export_json()[0][0], ensure_ascii=False, indent=4)
+    if request:
+        response = HttpResponse (content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=tarefas_restauro.json'
+        response.write(request)
+        return response
 
 def exportar_tarefas_xml(request):
-    tarefas = get_all_tarefas_restauro()
-    root = ET.Element("tarefas")
-    for tarefa in tarefas:
-        tarefa_element = ET.SubElement(root, "tarefa")
-        for field in tarefa:
-            field_element = ET.SubElement(tarefa_element, field)
-            field_element.text = str(getattr(tarefa, field))
-    tree = ET.ElementTree(root)
-    response = HttpResponse(content_type='application/xml')
-    tree.write(response, encoding='utf-8', xml_declaration=True)
-    return response
+    request = export_xml()[0][0]
+    if request:
+        response = HttpResponse (content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=tarefas_restauro.xml'
+        response.write(request)
+        return response
+
+
+def import_tarefas_restauro_xml_json(request):
+    if request.method == 'POST':
+        file = request.FILES['file']
+        if file.name.endswith('.json'):
+            import_from_json(file)
+        elif file.name.endswith('.xml'):
+            import_from_xml(file)
+        else:
+            messages.error(request, 'Formato de arquivo não suportado.')
+            return redirect('tarefas_restauro_view')
+        
+        messages.success(request, 'Tarefas de restauro importadas com sucesso.')
+        return redirect('tarefas_restauro_view')
+    return render(request, 'tarefas_restauro.html')
+
+def import_from_json(file):
+    data = json.load(file)
+    with connection.cursor() as cursor:
+        for tarefa in data:
+            cursor.execute("""
+                INSERT INTO tarefas_restauro (id, restauro_id, descricao, mao_obra, custo_total, tempo)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO UPDATE SET
+                restauro_id = EXCLUDED.restauro_id,
+                descricao = EXCLUDED.descricao,
+                mao_obra = EXCLUDED.mao_obra,
+                custo_total = EXCLUDED.custo_total,
+                tempo = EXCLUDED.tempo
+            """, (tarefa['id'], tarefa['restauro_id'], tarefa['descricao'], tarefa['mao_obra'], tarefa['custo_total'], tarefa['tempo']))
+
+def import_from_xml(file):
+    tree = ET.parse(file)
+    root = tree.getroot()
+    with connection.cursor() as cursor:
+        for tarefa in root.findall('tarefa'):
+            id = tarefa.find('id').text
+            restauro_id = tarefa.find('restauro_id').text
+            descricao = tarefa.find('descricao').text
+            mao_obra = tarefa.find('mao_obra').text
+            custo_total = tarefa.find('custo_total').text
+            tempo = tarefa.find('tempo').text
+
+            cursor.execute("""
+                INSERT INTO tarefas_restauro (id, restauro_id, descricao, mao_obra, custo_total, tempo)
+                VALUES (%s, %s, %s, %s, %s, %s)
+                ON CONFLICT (id) DO UPDATE SET
+                restauro_id = EXCLUDED.restauro_id,
+                descricao = EXCLUDED.descricao,
+                mao_obra = EXCLUDED.mao_obra,
+                custo_total = EXCLUDED.custo_total,
+                tempo = EXCLUDED.tempo
+            """, (id, restauro_id, descricao, mao_obra, custo_total, tempo))

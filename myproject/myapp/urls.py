@@ -60,4 +60,6 @@ urlpatterns = [
     path('exportar_tarefas_json/', views.exportar_tarefas_json, name='exportar_tarefas_json'),
     path('exportar_tarefas_xml/', views.exportar_tarefas_xml, name='exportar_tarefas_xml'),
 
+    path('import/', views.import_tarefas_restauro_xml_json, name='import_tarefas_restauro_xml_json'),
+
 ]
