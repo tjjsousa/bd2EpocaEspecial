@@ -1,7 +1,7 @@
 from django.shortcuts import render , redirect
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-from .database import get_all_tarefas_restauro_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
+from .database import alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
 from django.http import JsonResponse , HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -393,6 +393,24 @@ def faturacao_view(request):
     data = Faturacao.objects.all()
     return render(request, 'myapp/faturacao.html', {'data': data}) 
 
+
+def alterar_estado_para_pago_view(request, fatura_id):
+    if not request.session.get('user', {}).get('isAdmin', False):
+        return custom_404(request, None)
+    
+    if fatura_id :
+        faturacao = get_faturacao_id(fatura_id)
+        if faturacao is None:
+            return custom_404(request, None)
+        if faturacao.get('status_pagamento') == "Pago":
+            return custom_404(request, None)
+    
+    try:
+        alterar_estado_para_pago(fatura_id)
+        return redirect('faturacao_view')
+    except Exception as e:
+        return render(request, 'myapp/404.html', {'message': str(e)})
+
 def faturacao_insert_view(request):
     
     if not request.session.get('user', {}).get('isAdmin', False):
@@ -418,6 +436,8 @@ def faturacao_insert_view(request):
     veiculos = get_all_veiculos()
     
     return render(request, 'myapp/faturacao_form.html', {'form': form, 'veiculos': veiculos})
+
+
 
 def faturacao_edit_view(request, id):
     

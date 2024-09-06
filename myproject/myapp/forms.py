@@ -43,12 +43,12 @@ class TarefaRestauroForm(forms.Form):
     custo_total = forms.FloatField()
     tempo = forms.FloatField()
 
-
 class FaturacaoForm(forms.Form):
     restauro_id = forms.CharField(widget=forms.HiddenInput())
-    data = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    valor = forms.FloatField()
-    observacoes = forms.CharField(max_length=100)
+    data_emissao = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+    valor_total = forms.FloatField()
+    itens = forms.CharField(widget=forms.Textarea, required=False)
+    status_pagamento = forms.CharField(max_length=255)
 
 class TipoMaoObraForm(forms.Form):
     descricao = forms.CharField(max_length=100)

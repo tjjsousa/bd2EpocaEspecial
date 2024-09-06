@@ -41,7 +41,7 @@ urlpatterns = [
     path('faturacao_insert/', views.faturacao_insert_view, name='faturacao_insert_view'),
     path('faturacao_edit/<str:id>/', views.faturacao_edit_view, name='faturacao_edit_view'),
     path('faturacao_delete/<str:id>/', views.faturacao_delete_view, name='faturacao_delete_view'),
-
+    path('faturacao_pago/<int:fatura_id>/', views.alterar_estado_para_pago_view, name='alterar_estado_para_pago_view'),
     #FATURACAO
 
     #SAIDAS VEICULOS

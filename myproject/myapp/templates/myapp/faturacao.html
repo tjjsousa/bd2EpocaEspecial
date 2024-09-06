@@ -36,7 +36,10 @@
           <td>{{ faturacao.status_pagamento }}</td>
           {% if request.session.user.isAdmin %}
           <td>
-            <a href="{% url 'faturacao_edit_view' faturacao.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>
+            {% if faturacao.status_pagamento != 'Pago' %}
+            <a href="{% url 'alterar_estado_para_pago_view' faturacao.id %}" class="btn btn-warning btn-sm mr-2">Concluir</a>
+            {% endif %}
+            <!--<a href="{% url 'faturacao_edit_view' faturacao.id %}" class="btn btn-warning btn-sm mr-2">Editar</a>-->
             <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
               data-id="{{ faturacao.id }}">
               Apagar

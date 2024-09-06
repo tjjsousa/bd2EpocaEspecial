@@ -291,47 +291,63 @@ def remove_tarefa_restauro(tarefa_id):
         connection.close()
 
 #relativo a faturação
-def inserir_faturacao(cliente_id, veiculo_id, data, valor_total):
-    if cliente_id is None:
-        raise ValueError("O campo 'cliente_id' não pode ser nulo.")
-    
+def get_faturacao_id(fatura_id):
     try:
         with connection.cursor() as cursor:
-            cursor.execute(
-                "INSERT INTO faturas (cliente_id, veiculo_id, data, valor_total) VALUES (%s, %s, %s, %s)",
-                [cliente_id, veiculo_id, data, valor_total]
-            )
+            cursor.execute("SELECT * FROM faturacao WHERE id = %s", [fatura_id])
+            result = cursor.fetchone()
+            if result:
+                return {
+                    'id': result[0],
+                    'restauro_id': result[1],
+                    'data_emissao': result[2],
+                    'valor_total': result[3],
+                    'itens': result[4],
+                    'status_pagamento': result[5]
+                }
+            return None
     finally:
         connection.close()
 
-def editar_faturacao(fatura_id, cliente_id, veiculo_id, data, valor_total):
+def editar_faturacao(fatura_id, restauro_id, data_emissao, valor_total, itens, status_pagamento):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                UPDATE faturacao
+                SET restauro_id = %s,
+                    data_emissao = %s,
+                    valor_total = %s,
+                    itens = %s,
+                    status_pagamento = %s
+                WHERE id = %s
+            """, [restauro_id, data_emissao, valor_total, itens, status_pagamento, fatura_id])
+            connection.commit()
+    finally:
+        connection.close()
+
+def inserir_faturacao(restauro_id, data_emissao, valor_total, itens, status_pagamento):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO faturacao (restauro_id, data_emissao, valor_total, itens, status_pagamento)
+                VALUES (%s, %s, %s, %s, %s)
+            """, [restauro_id, data_emissao, valor_total, itens, status_pagamento])
+            connection.commit()
+    finally:
+        connection.close()
+
+def alterar_estado_para_pago(fatura_id):
     if fatura_id is None:
         raise ValueError("O campo 'fatura_id' não pode ser nulo.")
     
     try:
         with connection.cursor() as cursor:
-            cursor.execute(
-                "UPDATE faturas SET cliente_id = %s, veiculo_id = %s, data = %s, valor_total = %s WHERE id = %s",
-                [cliente_id, veiculo_id, data, valor_total, fatura_id]
-            )
-    finally:
-        connection.close()
-
-def get_fatura_id(fatura_id):
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT * FROM faturas WHERE id = %s", [fatura_id])
-            result = cursor.fetchone()
-            if result:
-                # Acesse os elementos da tupla usando índices inteiros
-                return {
-                    'id': result[0],
-                    'cliente_id': result[1],
-                    'veiculo_id': result[2],
-                    'data': result[3],
-                    'valor_total': result[4]
-                }
-            return None
+            cursor.execute("""
+                UPDATE faturacao
+                SET status_pagamento = 'Pago'
+                WHERE id = %s
+            """, [fatura_id])
+            connection.commit()
     finally:
         connection.close()
 
@@ -341,7 +357,7 @@ def remove_faturacao(fatura_id):
     
     try:
         with connection.cursor() as cursor:
-            cursor.execute("DELETE FROM faturas WHERE id = %s", [fatura_id])
+            cursor.execute("DELETE FROM faturacao WHERE id = %s", [fatura_id])
     finally:
         connection.close()
 
@@ -475,3 +491,4 @@ def get_all_tipos_mao_obra():
             return []
     finally:
         connection.close()
+
