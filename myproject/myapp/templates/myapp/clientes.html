@@ -48,11 +48,7 @@
         {% endfor %}
       </tbody>
     </table>
-    {% if request.session.user.isAdmin %}
-    <a href="{% url 'clientes_insert_view' %}" class="btn btn-success mt-3">Adicionar Cliente</a>
-    {% else %}
-    <p></p>
-    {% endif %}
+   
     
   </div>
   <!-- Adicione o JS do Bootstrap -->

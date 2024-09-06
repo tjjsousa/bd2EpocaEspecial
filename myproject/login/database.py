@@ -4,10 +4,13 @@ db = MongoConnection().get_db()
 Cliente = MongoConnection().get_collection('cliente')
 
 def register_user(nome, email, password):
+    # Verifica se o email já existe
+    if Cliente.find_one({'email': email}):
+        raise ValueError("Email já está em uso")
     # with all validations and checks
     # insert the user in the database
     user = {
-        '_id': generate_uuid_srt(),
+        'id': generate_uuid_srt(),
         'nome': nome,
         'email': email,
         'endereco': '',

@@ -33,7 +33,12 @@ def get_cliente_id(cliente_id):
     return Cliente.find_one({'id': cliente_id})
 
 def apagar_cliente(cliente_id):
+    print(cliente_id)
     return Cliente.delete_one({'id': cliente_id})
+
+def apagar_cliente_email(email):
+    print(email)
+    return Cliente.delete_one({'email': email})
 
 def inserir_veiculo(cliente, marca, modelo, matricula, cor, ano):
     veiculo_doc = {
