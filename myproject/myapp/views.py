@@ -3,7 +3,7 @@ from datetime import date
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
 from .database import apagar_cliente,alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente_email, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
-from django.http import JsonResponse , HttpResponseNotFound
+from django.http import JsonResponse , HttpResponseNotFound , HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 
@@ -635,3 +635,32 @@ def registo_saidas_delete_view(request, id):
         return JsonResponse({'success': True})
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 #SAIDA DE VEICULOS
+
+
+import json
+import xml.etree.ElementTree as ET
+from decimal import Decimal
+
+def decimal_default(obj):
+    if isinstance(obj, Decimal):
+        return str(obj)
+    raise TypeError
+
+def exportar_tarefas_json(request):
+    tarefas = get_all_tarefas_restauro()
+    response = HttpResponse(json.dumps(tarefas, default=decimal_default), content_type='application/json')
+    response['Content-Disposition'] = 'attachment; filename=tarefas_restauro.json'
+    return response
+
+def exportar_tarefas_xml(request):
+    tarefas = get_all_tarefas_restauro()
+    root = ET.Element("tarefas")
+    for tarefa in tarefas:
+        tarefa_element = ET.SubElement(root, "tarefa")
+        for field in tarefa:
+            field_element = ET.SubElement(tarefa_element, field)
+            field_element.text = str(getattr(tarefa, field))
+    tree = ET.ElementTree(root)
+    response = HttpResponse(content_type='application/xml')
+    tree.write(response, encoding='utf-8', xml_declaration=True)
+    return response

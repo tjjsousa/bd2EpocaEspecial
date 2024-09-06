@@ -56,4 +56,8 @@ urlpatterns = [
     path('registo_tipos_mao_obra_edit/<str:id>', views.registo_tipos_mao_obra_edit_view, name='registo_tipos_mao_obra_edit_view'),
     path('registo_tipos_mao_obra_delete/<str:id>', views.registo_tipos_mao_obra_delete_view, name='registo_tipos_mao_obra_delete_view'),
     #TIPOS MAO OBRA
+
+    path('exportar_tarefas_json/', views.exportar_tarefas_json, name='exportar_tarefas_json'),
+    path('exportar_tarefas_xml/', views.exportar_tarefas_xml, name='exportar_tarefas_xml'),
+
 ]

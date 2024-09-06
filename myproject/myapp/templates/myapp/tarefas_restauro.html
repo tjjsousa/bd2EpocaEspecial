@@ -13,6 +13,13 @@
       <h1>Lista de Tarefas de Restauro</h1>
       <a href="/myapp/" class="btn btn-primary">Voltar ao Inicio</a>
     </div>
+    <div>
+      <div class="export-buttons">
+        <a href="{% url 'exportar_tarefas_json' %}" class="btn btn-primary">Exportar JSON</a>
+        <a href="{% url 'exportar_tarefas_xml' %}" class="btn btn-primary">Exportar XML</a>
+      </div>
+    </div>
+    <p></p>
     {% if data %}
     <table class="table table-striped">
       <thead class="thead-dark">
