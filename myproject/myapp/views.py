@@ -1,4 +1,5 @@
 from django.shortcuts import render , redirect
+from datetime import date
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
 from .database import apagar_cliente,alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente_email, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id
@@ -226,6 +227,10 @@ def restauro_insert_view(request):
             
             if veiculo_id is None:
                 form.add_error('veiculo_id', 'O campo Veículo ID é obrigatório.')
+            elif data_inicio > date.today():
+                form.add_error('data_inicio', 'A data de início não pode ser maior do que a data atual.')
+            elif data_fim < data_inicio:
+                form.add_error('data_fim', 'A data de fim não pode ser menor do que a data de início.')
             else:
                 # Inserir o registro de entrada
                 inserir_restauro(veiculo_id, data_inicio, data_fim, status)
@@ -333,12 +338,6 @@ def tarefas_restauro_edit_view(request, id):
     if not request.session.get('user', {}).get('isAdmin', False):
         return custom_404(request, None)
     
-    if id :
-        restauro = get_restauro_id(id)
-        if restauro is None:
-            return custom_404(request, None)
-        if restauro.get('status') == "Concluído":
-            return custom_404(request, None)
     
     tarefa_restauro = get_tarefa_restauro_id(id)
     if request.method == "POST":
@@ -364,9 +363,18 @@ def tarefas_restauro_edit_view(request, id):
             'tempo': tarefa_restauro['tempo']
         })
     
+    restauros = get_all_restauros()
+    aux = []
+
+    #Verificar se o restauro está concluído
+    for restauro in restauros:
+        if restauro.get('status') != "Concluído":
+            aux.append(restauro)
+
+    restauros = aux
+
     # Buscar todos os veículos do MongoDB
     tipos_mao_De_obra = get_all_tipos_mao_obra()
-    restauros = get_all_restauros()
     
     return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros , 'tipos_mao_obra': tipos_mao_De_obra})
 
