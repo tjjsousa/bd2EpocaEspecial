@@ -226,6 +226,28 @@ def get_all_tarefas_restauro():
     finally:
         connection.close()
 
+def get_all_tarefas_restauro_id():
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM tarefas_restauro")
+            result = cursor.fetchall()
+            if result:
+                
+                return [
+                    {
+                        'id': row[0],
+                        'restauro_id': row[1],
+                        'descricao': row[2],
+                        'mao_obra': row[3],
+                        'custo_total': row[4],
+                        'tempo': row[5]
+                    }
+                    for row in result
+                ]
+            return []
+    finally:
+        connection.close()
+
 def get_tarefa_restauro_id(tarefa_id):
     try:
         with connection.cursor() as cursor:

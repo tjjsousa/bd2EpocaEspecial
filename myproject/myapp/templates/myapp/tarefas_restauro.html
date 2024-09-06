@@ -38,9 +38,12 @@
           <td>{{ tarefas_restauro.custo_total }}</td>
           <td>{{ tarefas_restauro.tempo }}</td>
           {% if request.session.user.isAdmin %}
+          
           <td>
+            {% if tarefas_restauro.restauro_id != 'Concluído' %}
             <a href="{% url 'tarefas_restauro_edit_view' tarefas_restauro.id %}"
               class="btn btn-warning btn-sm mr-2">Editar</a>
+            {% endif %}
             <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
               data-id="{{ tarefas_restauro.id }}">
               Apagar
