@@ -2,7 +2,7 @@ from django.shortcuts import render , redirect
 from datetime import date
 from .forms import VeiculoForm, ClienteForm , RegistoEntradaForm , RestauroForm , TarefaRestauroForm, FaturacaoForm, TipoMaoObraForm, RegistoSaidasForm
 from .models import Cliente, Veiculo, RegistoEntrada, Restauro, TarefaRestauro, Faturacao, SaidaVeiculo, TipoMaoObra
-from .database import apagar_cliente,alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente_email, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id, export_xml, export_json
+from .database import get_tarefa_restauro_id_id, apagar_cliente,alterar_estado_para_pago, inserir_faturacao, editar_faturacao , remove_faturacao ,get_faturacao_id , get_all_tipos_mao_obra , get_all_tarefas_restauro, get_tarefa_restauro_id , remove_tarefa_restauro , editar_tarefa_restauro, inserir_tarefas_restauro , inserir_cliente , inserir_veiculo, editar_cliente, editar_veiculo, get_cliente_id, apagar_cliente_email, get_veiculo_id, apagar_veiculo , inserir_registo_entrada, get_registo_entrada_id, remove_registo_entrada, get_all_veiculos , editar_registo_entrada , inserir_restauro , get_restauro_id , remove_restauro , editar_restauro , get_all_restauros, inserir_tipos_mao_obra, editar_tipos_mao_obra, get_tipo_mao_obra_id, remove_tipos_mao_obra, inserir_registo_saidas, editar_registo_saidas, remove_registo_saidas, get_registo_saidas_id, export_xml, export_json
 from django.http import JsonResponse , HttpResponseNotFound , HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -327,8 +327,20 @@ def restauro_delete_view(request, id):
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=400)
 
 def restauros_view(request):
+
+    user_email = request.session.get('user', {}).get('email')
+    cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+
+    if request.session.get('user', {}).get('isAdmin', True):
+        # Administradores podem ver todos os veículos
+        veiculos = Veiculo.objects.using('mongo').all()
+    else:
+        # Utilizadores normais só podem ver os seus veículos
+        cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+        veiculos = Veiculo.objects.using('mongo').filter(cliente=cliente_aux[0].id)
+
+
     restauros = Restauro.objects.all()
-    veiculos = Veiculo.objects.using('mongo').all()
     veiculo_dicts = [veiculo.__dict__ for veiculo in veiculos]
     restauros_dicts = [restauro.__dict__ for restauro in restauros]
     data = []
@@ -448,8 +460,30 @@ def tarefas_restauro_edit_view(request, id):
 
 
 def tarefas_restauro_view(request):
-    data = get_all_tarefas_restauro()
+    data = []
     restauro = get_all_restauros()
+
+    user_email = request.session.get('user', {}).get('email')
+    cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+    clientes = Cliente.objects.using('mongo').all()
+    clientes_dicts = [cliente.__dict__ for cliente in clientes]
+
+    if request.session.get('user', {}).get('isAdmin', True):
+        # Administradores podem ver todos os veículos
+        veiculos = Veiculo.objects.using('mongo').all()
+        for veiculo in veiculos:
+            
+            for aux in Restauro.objects.all().filter(veiculo_id=veiculo.id):
+                data.append(get_tarefa_restauro_id_id(aux.id))
+
+    else:
+        # Utilizadores normais só podem ver os seus veículos
+        cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+        veiculos = Veiculo.objects.using('mongo').filter(cliente=cliente_aux[0].id)
+        for veiculo in veiculos:
+            for aux in Restauro.objects.all().filter(veiculo_id=veiculo.id):
+                data.append(get_tarefa_restauro_id_id(aux.id))
+
 
     return render(request, 'myapp/tarefas_restauro.html', {'data': data , 'restauro': restauro})
 
@@ -467,7 +501,37 @@ def tarefas_restauro_delete_view(request, id):
 
 #FATURAÇÃO
 def faturacao_view(request): 
-    data = Faturacao.objects.all()
+
+    user_email = request.session.get('user', {}).get('email')
+    cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+
+    if request.session.get('user', {}).get('isAdmin', True):
+        # Administradores podem ver todos os veículos
+        veiculos = Veiculo.objects.using('mongo').all()
+    else:
+        # Utilizadores normais só podem ver os seus veículos
+        cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+        veiculos = Veiculo.objects.using('mongo').filter(cliente=cliente_aux[0].id)
+
+    restauros = Restauro.objects.all()
+    faturacao = Faturacao.objects.all()
+    data = []
+
+    for veiculo in veiculos:
+        for restauro in restauros:
+            if restauro.veiculo_id == veiculo.id:
+                for fatura in faturacao:
+                    if fatura.restauro_id == restauro.id:
+                        data.append(fatura)
+
+    
+
+    print(data[0].id)
+
+
+    restauros = data
+
+    
     return render(request, 'myapp/faturacao.html', {'data': data}) 
 
 

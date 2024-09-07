@@ -53,9 +53,7 @@
     {% else %}
     <p>Nenhuma faturação encontrada.</p>
     {% endif %}
-    {% if request.session.user.isAdmin %}
-    <a href="{% url 'faturacao_insert_view' %}" class="btn btn-success">Adicionar Faturação</a>
-    {% endif %}
+
   </div>
 
   <!-- Modal -->

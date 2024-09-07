@@ -65,6 +65,7 @@ class TarefaRestauro(models.Model):
     mao_obra = models.ForeignKey(TipoMaoObra, on_delete=models.CASCADE)
     tempo = models.DecimalField(max_digits=5, decimal_places=2)
     custo_total = models.DecimalField(max_digits=10, decimal_places=2)
+    restauro_id_id = models.CharField(max_length=50)
 
     class Meta:
         db_table = "tarefas_restauro"

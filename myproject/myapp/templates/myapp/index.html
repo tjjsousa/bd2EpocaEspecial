@@ -47,11 +47,13 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'veiculos_view' %}">Veículos</a>
           </li>
+          {% if request.session.user.isAdmin %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'registo_entradas_view' %}"
               >Registo de Entradas</a
             >
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'restauros_view' %}">Restauros</a>
           </li>
@@ -63,16 +65,20 @@
           <li class="nav-item">
             <a class="nav-link" href="{% url 'faturacao_view' %}">Faturação</a>
           </li>
+          {% if request.session.user.isAdmin %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'registo_saidas_view' %}"
               >Saídas de Veículos</a
             >
           </li>
+          {% endif %}
+          {% if request.session.user.isAdmin %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'registo_tipos_mao_obra_view' %}"
               >Tipos de Mão de Obra</a
             >
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="#" id="logout">Sair</a>
           </li>
@@ -123,25 +129,6 @@
         <div class="col-md-4">
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">Registo de Entradas</h5>
-              <p class="card-text">
-                registar novas entradas de veículos e gestão de registos
-                existentes.
-              </p>
-              <a
-                href="{% url 'registo_entradas_view' %}"
-                class="btn btn-primary"
-                >Ver Registos</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
               <h5 class="card-title">Restauros</h5>
               <p class="card-text">
                 Gestão do restauro de veículos, adicionar novos e editar
@@ -153,6 +140,10 @@
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="row">
+        
         <div class="col-md-4">
           <div class="card">
             <div class="card-body">
@@ -183,8 +174,27 @@
             </div>
           </div>
         </div>
+        {% if request.session.user.isAdmin %}
+        <div class="col-md-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Registo de Entradas</h5>
+              <p class="card-text">
+                registar novas entradas de veículos e gestão de registos
+                existentes.
+              </p>
+              <a
+                href="{% url 'registo_entradas_view' %}"
+                class="btn btn-primary"
+                >Ver Registos</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
 
+      {% if request.session.user.isAdmin %}
       <div class="row">
         <div class="col-md-4">
           <div class="card">
@@ -217,6 +227,7 @@
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
 
     <div class="footer">

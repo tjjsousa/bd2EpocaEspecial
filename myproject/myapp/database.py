@@ -272,6 +272,25 @@ def get_tarefa_restauro_id(tarefa_id):
     finally:
         connection.close()
 
+def get_tarefa_restauro_id_id(tarefa_id):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM tarefas_restauro_view WHERE restauro_id_id = %s", [tarefa_id])
+            result = cursor.fetchone()
+            if result:
+                
+                return {
+                    'id': result[0],
+                    'restauro_id': result[1],
+                    'descricao': result[2],
+                    'mao_obra': result[3],
+                    'custo_total': result[4],
+                    'tempo': result[5]
+                }
+            return None
+    finally:
+        connection.close()
+
 def editar_tarefa_restauro(tarefa_id, restauro_id, descricao, mao_obra, custo_total, tempo):
     if tarefa_id is None:
         raise ValueError("O campo 'tarefa_id' não pode ser nulo.")
