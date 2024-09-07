@@ -23,9 +23,11 @@
           <label for="restauro_id">Selecione um Restauro</label>
           <select id="restauro_id" name="restauro_id" class="form-control">
               {% for restauro in restauros %}
+              {% if restauro.status != 'Concluído' %}
               <option value="{{ restauro.id }}">
                   ID: {{ restauro.id }} - Veículo: {{ restauro.veiculo_id }} - Início: {{ restauro.data_inicio }} - Fim: {{ restauro.data_fim }} - Status: {{ restauro.status }}
               </option>
+              {% endif %}
               {% endfor %}
           </select>
       </div>
