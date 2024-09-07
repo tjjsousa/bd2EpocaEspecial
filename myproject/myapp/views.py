@@ -304,6 +304,19 @@ def restauro_delete_view(request, id):
 
 def restauros_view(request):
     restauros = Restauro.objects.all()
+    veiculos = Veiculo.objects.using('mongo').all()
+    veiculo_dicts = [veiculo.__dict__ for veiculo in veiculos]
+    restauros_dicts = [restauro.__dict__ for restauro in restauros]
+    data = []
+
+    for restauro in restauros_dicts:
+        for veiculo in veiculo_dicts:
+            if veiculo['id'] == restauro['veiculo_id']:
+                restauro['veiculo_id'] = veiculo['matricula']
+                data.append(restauro)
+
+    restauros = data
+    
     return render(request, 'myapp/restauros.html', {'restauros': restauros})
 #RESTAUROS
 
@@ -329,15 +342,27 @@ def tarefas_restauro_insert_view(request):
         form = TarefaRestauroForm()
 
     tipos_mao_obra = get_all_tipos_mao_obra()
-    restauros = get_all_restauros()
-    aux = []
+    restauros = Restauro.objects.all()
+    veiculos = Veiculo.objects.using('mongo').all()
+    veiculo_dicts = [veiculo.__dict__ for veiculo in veiculos]
+    data = []
 
     #Verificar se o restauro está concluído
     for restauro in restauros:
-        if restauro.get('status') != "Concluído":
-            aux.append(restauro)
+        aux = str(restauro.status)
+        if aux != "Concluído":
+            data.append(restauro)
 
-    restauros = aux
+
+    for restauro in restauros:
+        aux2 = str(restauro.veiculo_id)
+        print(aux2)
+        for veiculo in veiculo_dicts:
+            if veiculo['id'] == aux2:
+                restauro.veiculo_id = veiculo['matricula']
+                data.append(restauro)
+            
+
 
     return render(request, 'myapp/tarefas_restauro_form.html', {'form': form, 'restauros': restauros, 'tipos_mao_obra': tipos_mao_obra})
 
@@ -371,15 +396,26 @@ def tarefas_restauro_edit_view(request, id):
             'tempo': tarefa_restauro['tempo']
         })
     
-    restauros = get_all_restauros()
-    aux = []
+    restauros = Restauro.objects.all()
+    veiculos = Veiculo.objects.using('mongo').all()
+    veiculo_dicts = [veiculo.__dict__ for veiculo in veiculos]
+    data = []
 
     #Verificar se o restauro está concluído
     for restauro in restauros:
-        if restauro.get('status') != "Concluído":
-            aux.append(restauro)
+        aux = str(restauro.status)
+        if aux != "Concluído":
+            data.append(restauro)
 
-    restauros = aux
+
+    for restauro in restauros:
+        aux2 = str(restauro.veiculo_id)
+        print(aux2)
+        for veiculo in veiculo_dicts:
+            if veiculo['id'] == aux2:
+                restauro.veiculo_id = veiculo['matricula']
+                data.append(restauro)
+            
 
     # Buscar todos os veículos do MongoDB
     tipos_mao_De_obra = get_all_tipos_mao_obra()
