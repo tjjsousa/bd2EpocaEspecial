@@ -25,7 +25,19 @@ def index_view(request):
 #CLIENTES
 def clientes_view(request):
     
-    data = Cliente.objects.using('mongo').all()
+    user_email = request.session.get('user', {}).get('email')
+    cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+
+    if request.session.get('user', {}).get('isAdmin', True):
+        # Administradores podem ver todos os clientes
+        clientes = Cliente.objects.using('mongo').all()
+    else:
+        # Utilizadores normais só podem ver os seus registos
+        clientes = Cliente.objects.using('mongo').filter(email=user_email)
+
+        
+    
+    data = clientes
     return render(request, 'myapp/clientes.html', {'data': data})
 
 def clientes_insert_view(request, id = None):
@@ -72,9 +84,20 @@ def clientes_delete_view(request, id):
 
 #VEICULOS
 def veiculos_view(request):
+
+    user_email = request.session.get('user', {}).get('email')
+    cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
     clientes = Cliente.objects.using('mongo').all()
     clientes_dicts = [cliente.__dict__ for cliente in clientes]
-    veiculos = Veiculo.objects.using('mongo').all()
+
+    if request.session.get('user', {}).get('isAdmin', True):
+        # Administradores podem ver todos os veículos
+        veiculos = Veiculo.objects.using('mongo').all()
+    else:
+        # Utilizadores normais só podem ver os seus veículos
+        cliente_aux = Cliente.objects.using('mongo').filter(email=user_email)
+        veiculos = Veiculo.objects.using('mongo').filter(cliente=cliente_aux[0].id)
+
     veiculo_dicts = [veiculo.__dict__ for veiculo in veiculos]
     data = []
     
@@ -83,6 +106,7 @@ def veiculos_view(request):
             if veiculo['cliente'] == cliente['id']:
                 veiculo['cliente'] = cliente['nome']
                 data.append(veiculo)
+
 
     return render(request, 'myapp/veiculos.html', {'data': veiculos})
 
