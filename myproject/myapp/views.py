@@ -469,12 +469,8 @@ def tarefas_restauro_view(request):
     clientes_dicts = [cliente.__dict__ for cliente in clientes]
 
     if request.session.get('user', {}).get('isAdmin', True):
-        # Administradores podem ver todos os veículos
-        veiculos = Veiculo.objects.using('mongo').all()
-        for veiculo in veiculos:
-            
-            for aux in Restauro.objects.all().filter(veiculo_id=veiculo.id):
-                data.append(get_tarefa_restauro_id_id(aux.id))
+        data = get_all_tarefas_restauro()
+        
 
     else:
         # Utilizadores normais só podem ver os seus veículos
@@ -524,12 +520,6 @@ def faturacao_view(request):
                     if fatura.restauro_id == restauro.id:
                         data.append(fatura)
 
-    
-
-    print(data[0].id)
-
-
-    restauros = data
 
     
     return render(request, 'myapp/faturacao.html', {'data': data}) 

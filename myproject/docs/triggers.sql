@@ -13,7 +13,7 @@ WHEN (OLD.status = 'Em processamento' AND NEW.status = 'Concluído')
 EXECUTE FUNCTION criar_faturacao();
 
 
--- Trigger que chama a função ao inserir uma nova linha em tarefas_restauro
+-- Trigger que chama a função ao inserir uma nova linha nas tarefas_restauro
 CREATE OR REPLACE TRIGGER trg_calcular_custo_total
 BEFORE INSERT ON tarefas_restauro
 FOR EACH ROW

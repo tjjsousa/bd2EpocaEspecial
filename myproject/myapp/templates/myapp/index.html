@@ -10,37 +10,73 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     />
     <style>
-      .jumbotron {
+      body {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+        margin: 0;
+      }
+
+      .wrapper {
+        display: flex;
+        width: 100%;
+      }
+
+      /* Sidebar começa oculta */
+      .sidebar {
+        width: 250px;
         background-color: #f8f9fa;
-        padding: 2rem 1rem;
-        margin-bottom: 2rem;
+        padding: 15px;
+        position: fixed;
+        height: 100%;
+        overflow-y: auto;
+        transition: all 0.3s;
+        left: -250px; /* Oculta a sidebar fora da tela */
       }
-      .card {
-        margin-bottom: 1.5rem;
+
+      .sidebar.visible {
+        left: 0; /* Mostra a sidebar quando clicado no hambúrguer */
       }
+
+      .sidebar .nav-link {
+        color: #000;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #e9ecef;
+      }
+
+      .content {
+        margin-left: 0;
+        padding: 20px;
+        width: 100%;
+        transition: margin-left 0.3s;
+      }
+
+      .content.sidebar-visible {
+        margin-left: 260px;
+      }
+
       .footer {
         background-color: #f8f9fa;
         padding: 1rem 0;
         text-align: center;
-        margin-top: 2rem;
+        margin-top: auto;
+      }
+
+      .hamburger {
+        font-size: 30px;
+        cursor: pointer;
+        margin-right: 20px;
       }
     </style>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
+    <div class="wrapper">
+      <!-- Sidebar começa oculta -->
+      <div class="sidebar" id="sidebar">
+        <h4>Menu</h4>
+        <ul class="nav flex-column">
           <li class="nav-item">
             <a class="nav-link" href="{% url 'clientes_view' %}">Clientes</a>
           </li>
@@ -49,189 +85,164 @@
           </li>
           {% if request.session.user.isAdmin %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'registo_entradas_view' %}"
-              >Registo de Entradas</a
-            >
+            <a class="nav-link" href="{% url 'registo_entradas_view' %}">Registo de Entradas</a>
           </li>
           {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="{% url 'restauros_view' %}">Restauros</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'tarefas_restauro_view' %}"
-              >Tarefas de Restauro</a
-            >
+            <a class="nav-link" href="{% url 'tarefas_restauro_view' %}">Tarefas de Restauro</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{% url 'faturacao_view' %}">Faturação</a>
           </li>
           {% if request.session.user.isAdmin %}
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'registo_saidas_view' %}"
-              >Saídas de Veículos</a
-            >
+            <a class="nav-link" href="{% url 'registo_saidas_view' %}">Saídas de Veículos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'registo_tipos_mao_obra_view' %}">Tipos de Mão de Obra</a>
           </li>
           {% endif %}
-          {% if request.session.user.isAdmin %}
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'registo_tipos_mao_obra_view' %}"
-              >Tipos de Mão de Obra</a
-            >
-          </li>
-          {% endif %}
-          <li class="nav-item">
-            <a class="nav-link" href="#" id="logout">Sair</a>
-          </li>
         </ul>
       </div>
-    </nav>
 
-    <div class="container">
-      <div class="jumbotron text-center">
-        <h1 class="display-4">Bem-vindo</h1>
-        <p class="lead">
-          Faz a gestão de todos os aspetos do negócio de restauro de veículos de
-          forma eficiente e fácil.
-        </p>
-        <hr class="my-4" />
-        <p>Explora as funcionalidades abaixo para começar.</p>
-      </div>
+      <div class="content" id="content">
+        <nav class="navbar navbar-light bg-light">
+          <span class="hamburger" id="hamburger">&#9776;</span>
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="#" id="logout">Sair</a>
+            </li>
+          </ul>
+        </nav>
 
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Clientes</h5>
-              <p class="card-text">
-                Gestão de todos os clientes, adicionar novos e editar
-                informações existentes.
-              </p>
-              <a href="{% url 'clientes_view' %}" class="btn btn-primary"
-                >Ver Clientes</a
-              >
-            </div>
+        <div class="container">
+          <div class="jumbotron text-center">
+            <h1 class="display-4">Bem-vindo</h1>
+            <p class="lead">
+              Faz a gestão de todos os aspetos do negócio de restauro de veículos de
+              forma eficiente e fácil.
+            </p>
+            <hr class="my-4" />
+            <p>Explora as funcionalidades abaixo para começar.</p>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Veículos</h5>
-              <p class="card-text">
-                gestão da quantidade de veículos, adicionar novos e editar
-                informações existentes.
-              </p>
-              <a href="{% url 'veiculos_view' %}" class="btn btn-primary"
-                >Ver Veículos</a
-              >
-            </div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Restauros</h5>
-              <p class="card-text">
-                Gestão do restauro de veículos, adicionar novos e editar
-                informações existentes.
-              </p>
-              <a href="{% url 'restauros_view' %}" class="btn btn-primary"
-                >Ver Restauros</a
-              >
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="row">
-        
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Tarefas de Restauro</h5>
-              <p class="card-text">
-                Gestão das tarefas de restauro, adicionar novas e editar
-                informações existentes.
-              </p>
-              <a
-                href="{% url 'tarefas_restauro_view' %}"
-                class="btn btn-primary"
-                >Ver Tarefas</a
-              >
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Clientes</h5>
+                  <p class="card-text">
+                    Gestão de todos os clientes, adicionar novos e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'clientes_view' %}" class="btn btn-primary">Ver Clientes</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Veículos</h5>
+                  <p class="card-text">
+                    Gestão da quantidade de veículos, adicionar novos e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'veiculos_view' %}" class="btn btn-primary">Ver Veículos</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Restauros</h5>
+                  <p class="card-text">
+                    Gestão do restauro de veículos, adicionar novos e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'restauros_view' %}" class="btn btn-primary">Ver Restauros</a>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Faturação</h5>
-              <p class="card-text">
-                Gestão da faturação, adicionar novas faturas e editar
-                informações existentes.
-              </p>
-              <a href="{% url 'faturacao_view' %}" class="btn btn-primary"
-                >Ver Faturação</a
-              >
-            </div>
-          </div>
-        </div>
-        {% if request.session.user.isAdmin %}
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Registo de Entradas</h5>
-              <p class="card-text">
-                registar novas entradas de veículos e gestão de registos
-                existentes.
-              </p>
-              <a
-                href="{% url 'registo_entradas_view' %}"
-                class="btn btn-primary"
-                >Ver Registos</a
-              >
-            </div>
-          </div>
-        </div>
-        {% endif %}
-      </div>
 
-      {% if request.session.user.isAdmin %}
-      <div class="row">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Saídas de Veículos</h5>
-              <p class="card-text">
-                Gestão de saídas de veículos, adicionar novas e editar
-                informações existentes.
-              </p>
-              <a href="{% url 'registo_saidas_view' %}" class="btn btn-primary"
-                >Ver Saídas</a
-              >
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Tarefas de Restauro</h5>
+                  <p class="card-text">
+                    Gestão das tarefas de restauro, adicionar novas e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'tarefas_restauro_view' %}" class="btn btn-primary">Ver Tarefas</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Faturação</h5>
+                  <p class="card-text">
+                    Gestão da faturação, adicionar novas faturas e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'faturacao_view' %}" class="btn btn-primary">Ver Faturação</a>
+                </div>
+              </div>
+            </div>
+            {% if request.session.user.isAdmin %}
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Registo de Entradas</h5>
+                  <p class="card-text">
+                    Registar novas entradas de veículos e gestão de registos
+                    existentes.
+                  </p>
+                  <a href="{% url 'registo_entradas_view' %}" class="btn btn-primary">Ver Registos</a>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          {% if request.session.user.isAdmin %}
+          <div class="row">
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Saídas de Veículos</h5>
+                  <p class="card-text">
+                    Gestão de saídas de veículos, adicionar novas e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'registo_saidas_view' %}" class="btn btn-primary">Ver Saídas</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Tipos de Mão de Obra</h5>
+                  <p class="card-text">
+                    Gestão dos tipos de mão de obra, adicionar novos e editar
+                    informações existentes.
+                  </p>
+                  <a href="{% url 'registo_tipos_mao_obra_view' %}" class="btn btn-primary">Ver Tipos</a>
+                </div>
+              </div>
             </div>
           </div>
+          {% endif %}
         </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Tipos de Mão de Obra</h5>
-              <p class="card-text">
-                Gestão dos tipos de mão de obra, adicionar novos e editar
-                informações existentes.
-              </p>
-              <a
-                href="{% url 'registo_tipos_mao_obra_view' %}"
-                class="btn btn-primary"
-                >Ver Tipos</a
-              >
-            </div>
-          </div>
+
+        <div class="footer">
+          <p>&copy; 2024 Aplicação. Todos os direitos reservados.</p>
         </div>
       </div>
-      {% endif %}
-    </div>
-
-    <div class="footer">
-      <p>&copy; 2024 aplicação. Todos os direitos reservados.</p>
     </div>
 
     <!-- Adicionando scripts do Bootstrap -->
@@ -244,6 +255,15 @@
       document.getElementById("logout").addEventListener("click", function () {
         localStorage.removeItem("user");
         window.location.href = "/login/";
+      });
+
+      // Lógica para mostrar/ocultar a sidebar
+      document.getElementById("hamburger").addEventListener("click", function () {
+        var sidebar = document.getElementById("sidebar");
+        var content = document.getElementById("content");
+
+        sidebar.classList.toggle("visible");
+        content.classList.toggle("sidebar-visible");
       });
     </script>
   </body>
